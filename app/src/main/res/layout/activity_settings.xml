@@ -1,39 +1,135 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/white"
     android:orientation="vertical">
 
-    <FrameLayout
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="56dp">
+        android:layout_height="56dp"
+        android:layout_marginBottom="24dp"
+        android:gravity="center_vertical">
 
-        <Button
+        <ImageButton
             android:layout_width="48dp"
             android:layout_height="48dp"
-            android:layout_gravity="start"
             android:layout_margin="4dp"
             android:background="@android:color/transparent"
-            app:iconTint="@color/black" />
+            android:src="@drawable/arrow_back" />
 
         <TextView
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="26dp"
-            android:layout_marginTop="14dp"
+            android:layout_marginStart="12dp"
+            android:layout_weight="1"
             android:text="@string/settings"
-            android:textColor="@color/white"
+            android:textColor="@color/black"
             android:textSize="22sp" />
 
         <Button
             android:layout_width="48dp"
             android:layout_height="48dp"
-            android:layout_gravity="end"
             android:layout_margin="4dp"
+            android:gravity="center_horizontal"
             android:visibility="invisible"
             app:icon="@drawable/filter" />
-    </FrameLayout>
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="61dp"
+        android:gravity="center_vertical">
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
+            android:layout_weight="1"
+            android:text="@string/dark_theme"
+            android:textColor="@color/text_black"
+            android:textSize="16sp" />
+
+        <com.google.android.material.switchmaterial.SwitchMaterial
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="12dp"
+            android:checked="true"
+            tools:ignore="UseSwitchCompatOrMaterialXml" />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="61dp"
+        android:gravity="center_vertical">
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
+            android:layout_weight="1"
+            android:text="@string/share_app"
+            android:textColor="@color/text_black"
+            android:textSize="16sp" />
+
+        <ImageButton
+            android:layout_width="24dp"
+            android:layout_height="24dp"
+            android:layout_marginStart="8dp"
+            android:layout_marginEnd="12dp"
+            android:background="@android:color/transparent"
+            android:src="@drawable/share" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="61dp"
+        android:gravity="center_vertical">
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
+            android:layout_weight="1"
+            android:text="@string/text_support"
+            android:textColor="@color/text_black"
+            android:textSize="16sp" />
+
+        <ImageButton
+            android:layout_width="24dp"
+            android:layout_height="24dp"
+            android:layout_marginStart="8dp"
+            android:layout_marginEnd="12dp"
+            android:background="@android:color/transparent"
+            android:checked="true"
+            android:src="@drawable/support" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="61dp"
+        android:gravity="center_vertical">
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
+            android:layout_weight="1"
+            android:text="@string/user_agreement"
+            android:textColor="@color/text_black"
+            android:textSize="16sp" />
+
+        <ImageButton
+            android:layout_width="24dp"
+            android:layout_height="24dp"
+            android:layout_marginStart="8dp"
+            android:layout_marginEnd="12dp"
+            android:background="@android:color/transparent"
+            android:src="@drawable/arrow_forward" />
+    </LinearLayout>
 
 </LinearLayout>
