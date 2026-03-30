@@ -1,12 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/white"
-    android:orientation="vertical">
+    android:orientation="vertical"
+    tools:context=".SettingsActivity">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -15,6 +14,7 @@
         android:gravity="center_vertical">
 
         <ImageButton
+            android:id="@+id/btn_back"
             android:layout_width="48dp"
             android:layout_height="48dp"
             android:layout_margin="4dp"
@@ -28,20 +28,20 @@
             android:layout_weight="1"
             android:text="@string/settings"
             android:textColor="@color/black"
-            android:textSize="22sp" />
+            android:textSize="@dimen/text_medium_22" />
 
-        <Button
+        <ImageButton
             android:layout_width="48dp"
             android:layout_height="48dp"
             android:layout_margin="4dp"
             android:gravity="center_horizontal"
             android:visibility="invisible"
-            app:icon="@drawable/filter" />
+            android:src="@drawable/filter" />
     </LinearLayout>
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="61dp"
+        android:layout_height="@dimen/row_settings"
         android:gravity="center_vertical">
 
         <TextView
@@ -51,7 +51,7 @@
             android:layout_weight="1"
             android:text="@string/dark_theme"
             android:textColor="@color/text_black"
-            android:textSize="16sp" />
+            android:textSize="@dimen/text_regular_16" />
 
         <com.google.android.material.switchmaterial.SwitchMaterial
             android:layout_width="wrap_content"
@@ -64,7 +64,7 @@
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="61dp"
+        android:layout_height="@dimen/row_settings"
         android:gravity="center_vertical">
 
         <TextView
@@ -74,7 +74,7 @@
             android:layout_weight="1"
             android:text="@string/share_app"
             android:textColor="@color/text_black"
-            android:textSize="16sp" />
+            android:textSize="@dimen/text_regular_16" />
 
         <ImageButton
             android:layout_width="24dp"
@@ -87,7 +87,7 @@
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="61dp"
+        android:layout_height="@dimen/row_settings"
         android:gravity="center_vertical">
 
         <TextView
@@ -97,7 +97,7 @@
             android:layout_weight="1"
             android:text="@string/text_support"
             android:textColor="@color/text_black"
-            android:textSize="16sp" />
+            android:textSize="@dimen/text_regular_16" />
 
         <ImageButton
             android:layout_width="24dp"
@@ -111,7 +111,7 @@
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="61dp"
+        android:layout_height="@dimen/row_settings"
         android:gravity="center_vertical">
 
         <TextView
@@ -121,7 +121,7 @@
             android:layout_weight="1"
             android:text="@string/user_agreement"
             android:textColor="@color/text_black"
-            android:textSize="16sp" />
+            android:textSize="@dimen/text_regular_16" />
 
         <ImageButton
             android:layout_width="24dp"

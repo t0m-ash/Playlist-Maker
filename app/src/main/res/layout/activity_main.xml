@@ -2,96 +2,104 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/blue"
     android:orientation="vertical"
     tools:context=".MainActivity">
 
-    <FrameLayout
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="56dp">
+        android:layout_height="56dp"
+        android:gravity="center_vertical">
+
+        <ImageButton
+            android:id="@+id/btn_back"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:layout_margin="4dp"
+            android:background="@android:color/transparent"
+            android:src="@drawable/arrow_back"
+            android:visibility="gone" />
 
         <TextView
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="26dp"
             android:layout_marginStart="16dp"
-            android:layout_marginTop="14dp"
+            android:layout_weight="1"
             android:text="@string/app_name"
             android:textColor="@color/white"
-            android:textSize="22sp" />
+            android:textSize="@dimen/text_medium_22" />
 
-        <Button
+        <ImageButton
             android:layout_width="48dp"
             android:layout_height="48dp"
-            android:layout_gravity="end"
             android:layout_margin="4dp"
-            android:visibility="invisible"
-            app:icon="@drawable/filter" />
+            android:background="@android:color/transparent"
+            android:gravity="center_horizontal"
+            android:src="@drawable/filter"
+            android:visibility="invisible" />
+    </LinearLayout>
 
-        <Button
-            android:layout_width="48dp"
-            android:layout_height="48dp"
-            android:layout_gravity="start"
-            android:layout_margin="4dp"
-            android:visibility="invisible"
-            app:icon="@drawable/arrow_back" />
-
-    </FrameLayout>
-
-    <Button
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/btn_search"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_marginStart="16dp"
+        android:layout_marginStart="@dimen/main_btn_start"
         android:layout_marginTop="24dp"
-        android:layout_marginEnd="16dp"
+        android:layout_marginEnd="@dimen/main_btn_end"
         android:layout_weight="1"
         android:backgroundTint="@color/white"
         android:text="@string/search"
         android:textAllCaps="false"
         android:textColor="@color/black"
-        android:textSize="22sp"
+        android:textSize="@dimen/text_medium_22"
         app:cornerRadius="16dp"
         app:icon="@drawable/search"
         app:iconGravity="textStart"
         app:iconPadding="10dp"
-        app:iconTint="@color/black" />
+        app:iconTint="@color/black"/>
 
-    <Button
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/btn_library"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_marginStart="16dp"
-        android:layout_marginTop="16dp"
-        android:layout_marginEnd="16dp"
+        android:layout_marginStart="@dimen/main_btn_start"
+        android:layout_marginTop="@dimen/main_btn_top"
+        android:layout_marginEnd="@dimen/main_btn_end"
         android:layout_weight="1"
         android:backgroundTint="@color/white"
         android:text="@string/library"
         android:textAllCaps="false"
         android:textColor="@color/black"
-        android:textSize="22sp"
+        android:textSize="@dimen/text_medium_22"
         app:cornerRadius="16dp"
         app:icon="@drawable/library"
         app:iconGravity="textStart"
         app:iconPadding="10dp"
-        app:iconTint="@color/black" />
+        app:iconTint="@color/black"
+        app:insetBottom="0dp"
+        app:insetTop="0dp" />
 
-    <Button
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/btn_settings"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_marginStart="16dp"
-        android:layout_marginTop="16dp"
-        android:layout_marginEnd="16dp"
+        android:layout_marginStart="@dimen/main_btn_start"
+        android:layout_marginTop="@dimen/main_btn_top"
+        android:layout_marginEnd="@dimen/main_btn_end"
         android:layout_marginBottom="28dp"
         android:layout_weight="1"
         android:backgroundTint="@color/white"
         android:text="@string/settings"
         android:textAllCaps="false"
         android:textColor="@color/black"
-        android:textSize="22sp"
+        android:textSize="@dimen/text_medium_22"
         app:cornerRadius="16dp"
         app:icon="@drawable/settings"
         app:iconGravity="textStart"
         app:iconPadding="8dp"
-        app:iconTint="@color/black" />
+        app:iconTint="@color/black"
+        app:insetBottom="0dp"
+        app:insetTop="0dp" />
 </LinearLayout>

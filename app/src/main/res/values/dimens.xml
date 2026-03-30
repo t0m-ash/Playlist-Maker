@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <dimen name="main_btn_start">16dp</dimen>
+    <dimen name="main_btn_top">16dp</dimen>
+    <dimen name="main_btn_end">16dp</dimen>
+    <dimen name="text_medium_22">22sp</dimen>
+    <dimen name="text_regular_16">16sp</dimen>
+    <dimen name="row_settings">61dp</dimen>
+</resources>
