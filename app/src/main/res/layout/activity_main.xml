@@ -10,16 +10,16 @@
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="56dp"
+        android:layout_height="@dimen/bar_56"
         android:gravity="center_vertical">
 
         <ImageButton
             android:id="@+id/btn_back"
-            android:layout_width="48dp"
-            android:layout_height="48dp"
-            android:layout_margin="4dp"
+            android:layout_width="@dimen/ib_with_48"
+            android:layout_height="@dimen/ib_height_48dp"
+            android:layout_margin="@dimen/ib_bar_margin_4"
             android:background="@android:color/transparent"
-            android:src="@drawable/arrow_back"
+            android:src="@drawable/ic_arrow_back_24"
             android:visibility="gone" />
 
         <TextView
@@ -32,12 +32,12 @@
             android:textSize="@dimen/text_medium_22" />
 
         <ImageButton
-            android:layout_width="48dp"
-            android:layout_height="48dp"
-            android:layout_margin="4dp"
+            android:layout_width="@dimen/ib_with_48"
+            android:layout_height="@dimen/ib_height_48dp"
+            android:layout_margin="@dimen/ib_bar_margin_4"
             android:background="@android:color/transparent"
             android:gravity="center_horizontal"
-            android:src="@drawable/filter"
+            android:src="@drawable/ic_filter_24"
             android:visibility="invisible" />
     </LinearLayout>
 
@@ -54,11 +54,11 @@
         android:textAllCaps="false"
         android:textColor="@color/black"
         android:textSize="@dimen/text_medium_22"
-        app:cornerRadius="16dp"
-        app:icon="@drawable/search"
+        app:cornerRadius="@dimen/main_btn_radius_16"
+        app:icon="@drawable/ic_search_24"
         app:iconGravity="textStart"
         app:iconPadding="10dp"
-        app:iconTint="@color/black"/>
+        app:iconTint="@color/black" />
 
     <com.google.android.material.button.MaterialButton
         android:id="@+id/btn_library"
@@ -73,13 +73,11 @@
         android:textAllCaps="false"
         android:textColor="@color/black"
         android:textSize="@dimen/text_medium_22"
-        app:cornerRadius="16dp"
-        app:icon="@drawable/library"
+        app:cornerRadius="@dimen/main_btn_radius_16"
+        app:icon="@drawable/ic_library_24"
         app:iconGravity="textStart"
         app:iconPadding="10dp"
-        app:iconTint="@color/black"
-        app:insetBottom="0dp"
-        app:insetTop="0dp" />
+        app:iconTint="@color/black" />
 
     <com.google.android.material.button.MaterialButton
         android:id="@+id/btn_settings"
@@ -95,11 +93,9 @@
         android:textAllCaps="false"
         android:textColor="@color/black"
         android:textSize="@dimen/text_medium_22"
-        app:cornerRadius="16dp"
-        app:icon="@drawable/settings"
+        app:cornerRadius="@dimen/main_btn_radius_16"
+        app:icon="@drawable/ic_settings_24"
         app:iconGravity="textStart"
         app:iconPadding="8dp"
-        app:iconTint="@color/black"
-        app:insetBottom="0dp"
-        app:insetTop="0dp" />
+        app:iconTint="@color/black" />
 </LinearLayout>

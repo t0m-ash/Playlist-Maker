@@ -6,4 +6,14 @@
     <dimen name="text_medium_22">22sp</dimen>
     <dimen name="text_regular_16">16sp</dimen>
     <dimen name="row_settings">61dp</dimen>
+    <dimen name="ib_with_48">48dp</dimen>
+    <dimen name="ib_height_48dp">48dp</dimen>
+    <dimen name="ib_width_24">24dp</dimen>
+    <dimen name="ib_height_24">24dp</dimen>
+    <dimen name="bar_56">56dp</dimen>
+    <dimen name="main_btn_radius_16">16dp</dimen>
+    <dimen name="text_setting_start_16">16dp</dimen>
+    <dimen name="ib_text_start_8">8dp</dimen>
+    <dimen name="ib_text_start_12">12dp</dimen>
+    <dimen name="ib_bar_margin_4">4dp</dimen>
 </resources>
