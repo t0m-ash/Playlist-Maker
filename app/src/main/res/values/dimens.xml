@@ -3,8 +3,8 @@
     <dimen name="main_btn_start">16dp</dimen>
     <dimen name="main_btn_top">16dp</dimen>
     <dimen name="main_btn_end">16dp</dimen>
-    <dimen name="text_medium_22">22sp</dimen>
-    <dimen name="text_regular_16">16sp</dimen>
+    <dimen name="text_size_22">22sp</dimen>
+    <dimen name="text_size_16">16sp</dimen>
     <dimen name="row_settings">61dp</dimen>
     <dimen name="ib_with_48">48dp</dimen>
     <dimen name="ib_height_48dp">48dp</dimen>

@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/blue"
+    android:background="@color/main_activity_background"
     android:orientation="vertical"
     tools:context=".MainActivity">
 
@@ -29,7 +29,7 @@
             android:layout_weight="1"
             android:text="@string/app_name"
             android:textColor="@color/white"
-            android:textSize="@dimen/text_medium_22" />
+            android:textSize="@dimen/text_size_22" />
 
         <ImageButton
             android:layout_width="@dimen/ib_with_48"
@@ -43,44 +43,35 @@
 
     <com.google.android.material.button.MaterialButton
         android:id="@+id/btn_search"
+        style="@style/MainButtonStyle"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_marginStart="@dimen/main_btn_start"
         android:layout_marginTop="24dp"
         android:layout_marginEnd="@dimen/main_btn_end"
         android:layout_weight="1"
-        android:backgroundTint="@color/white"
         android:text="@string/search"
-        android:textAllCaps="false"
-        android:textColor="@color/black"
-        android:textSize="@dimen/text_medium_22"
-        app:cornerRadius="@dimen/main_btn_radius_16"
         app:icon="@drawable/ic_search_24"
         app:iconGravity="textStart"
-        app:iconPadding="10dp"
-        app:iconTint="@color/black" />
+        app:iconPadding="10dp" />
 
     <com.google.android.material.button.MaterialButton
         android:id="@+id/btn_library"
+        style="@style/MainButtonStyle"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_marginStart="@dimen/main_btn_start"
         android:layout_marginTop="@dimen/main_btn_top"
         android:layout_marginEnd="@dimen/main_btn_end"
         android:layout_weight="1"
-        android:backgroundTint="@color/white"
         android:text="@string/library"
-        android:textAllCaps="false"
-        android:textColor="@color/black"
-        android:textSize="@dimen/text_medium_22"
-        app:cornerRadius="@dimen/main_btn_radius_16"
         app:icon="@drawable/ic_library_24"
         app:iconGravity="textStart"
-        app:iconPadding="10dp"
-        app:iconTint="@color/black" />
+        app:iconPadding="10dp" />
 
     <com.google.android.material.button.MaterialButton
         android:id="@+id/btn_settings"
+        style="@style/MainButtonStyle"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_marginStart="@dimen/main_btn_start"
@@ -88,14 +79,8 @@
         android:layout_marginEnd="@dimen/main_btn_end"
         android:layout_marginBottom="28dp"
         android:layout_weight="1"
-        android:backgroundTint="@color/white"
         android:text="@string/settings"
-        android:textAllCaps="false"
-        android:textColor="@color/black"
-        android:textSize="@dimen/text_medium_22"
-        app:cornerRadius="@dimen/main_btn_radius_16"
         app:icon="@drawable/ic_settings_24"
         app:iconGravity="textStart"
-        app:iconPadding="8dp"
-        app:iconTint="@color/black" />
+        app:iconPadding="8dp" />
 </LinearLayout>

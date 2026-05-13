@@ -28,7 +28,7 @@
             android:layout_weight="1"
             android:text="@string/settings"
             android:textColor="@color/black"
-            android:textSize="@dimen/text_medium_22" />
+            android:textSize="@dimen/text_size_22" />
 
         <ImageButton
             android:layout_width="@dimen/ib_with_48"
