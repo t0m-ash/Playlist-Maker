@@ -1,14 +1,13 @@
 package com.practicum.playlistmaker
 
 import android.os.Bundle
-import android.text.Editable
-import android.text.TextWatcher
 import android.view.View
 import android.view.inputmethod.InputMethodManager
 import android.widget.EditText
 import android.widget.ImageButton
 import android.widget.ImageView
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.widget.addTextChangedListener
 
 class SearchActivity : AppCompatActivity() {
     private lateinit var searchEditText: EditText
@@ -34,20 +33,14 @@ class SearchActivity : AppCompatActivity() {
             searchEditText.clearFocus()
         }
 
-        val searchTextWatcher = object : TextWatcher {
-            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
-                // заглушка
-            }
-
-            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
+        searchEditText.addTextChangedListener(
+            onTextChanged = { s, _, _, _ ->
                 clearButton.visibility = clearButtonVisibility(s)
-            }
-
-            override fun afterTextChanged(s: Editable?) {
+            },
+            afterTextChanged = { s ->
                 searchText = s?.toString().orEmpty()
             }
-        }
-        searchEditText.addTextChangedListener(searchTextWatcher)
+        )
     }
 
     private fun clearButtonVisibility(s: CharSequence?): Int {
@@ -69,7 +62,7 @@ class SearchActivity : AppCompatActivity() {
     }
 
     companion object {
-        const val SEARCH_STRING_KEY = "SEARCH_STRING"
-        const val SEARCH_VALUE = ""
+        private const val SEARCH_STRING_KEY = "SEARCH_STRING"
+        private const val SEARCH_VALUE = ""
     }
 }
