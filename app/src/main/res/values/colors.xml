@@ -13,4 +13,6 @@
     <color name="search_field_background">@color/light_gray</color>
     <color name="track_title">@color/black</color>
     <color name="track_subtitle">@color/text_gray</color>
+    <color name="action_button_background">@color/black</color>
+    <color name="action_button_text">@color/white</color>
 </resources>

@@ -14,4 +14,8 @@
     <string name="support_email">evgeny.tomaschevitch@yandex.by</string>
     <string name="track_artwork_description">Обложка трека</string>
     <string name="track_info_separator">•</string>
+    <string name="search_nothing_found">Ничего не нашлось</string>
+    <string name="search_connection_problem">Проблемы со связью\n\nЗагрузка не удалась. Проверьте подключение к интернету и попробуйте ещё раз</string>
+    <string name="search_refresh">Обновить</string>
+    <string name="search_placeholder_description">Изображение-заглушка</string>
 </resources>
