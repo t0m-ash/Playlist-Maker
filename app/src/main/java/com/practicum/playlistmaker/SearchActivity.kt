@@ -15,7 +15,7 @@ class SearchActivity : AppCompatActivity() {
     private lateinit var searchEditText: EditText
     private var searchText: String = SEARCH_VALUE
 
-    private val tracks = arrayListOf(
+    private val tracks = listOf(
         Track(
             trackName = "Smells Like Teen Spirit",
             artistName = "Nirvana",
