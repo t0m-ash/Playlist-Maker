@@ -11,4 +11,6 @@
 
     <color name="main_activity_background">@color/blue</color>
     <color name="search_field_background">@color/light_gray</color>
+    <color name="track_title">@color/black</color>
+    <color name="track_subtitle">@color/text_gray</color>
 </resources>
