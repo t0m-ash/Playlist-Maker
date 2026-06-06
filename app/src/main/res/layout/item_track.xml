@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:minHeight="@dimen/track_item_min_height"
+    android:paddingHorizontal="@dimen/track_item_padding_horizontal"
+    android:paddingVertical="@dimen/track_item_padding_vertical">
+
+    <ImageView
+        android:id="@+id/trackArtwork"
+        android:layout_width="@dimen/track_artwork_size"
+        android:layout_height="@dimen/track_artwork_size"
+        android:contentDescription="@string/track_artwork_description"
+        android:scaleType="centerCrop"
+        android:src="@drawable/ic_placeholder"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/trackName"
+        style="@style/TrackNameStyle"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/track_artwork_margin_end"
+        app:layout_constraintBottom_toTopOf="@id/artistName"
+        app:layout_constraintEnd_toStartOf="@id/trackChevron"
+        app:layout_constraintStart_toEndOf="@id/trackArtwork"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_chainStyle="packed"
+        tools:text="Smells Like Teen Spirit" />
+
+    <TextView
+        android:id="@+id/artistName"
+        style="@style/TrackSubtitleStyle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/track_artwork_margin_end"
+        android:layout_marginTop="@dimen/track_text_spacing"
+        app:layout_constrainedWidth="true"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toStartOf="@id/trackDot"
+        app:layout_constraintHorizontal_bias="0"
+        app:layout_constraintHorizontal_chainStyle="packed"
+        app:layout_constraintStart_toEndOf="@id/trackArtwork"
+        app:layout_constraintTop_toBottomOf="@id/trackName"
+        tools:text="Nirvana" />
+
+    <TextView
+        android:id="@+id/trackDot"
+        style="@style/TrackSubtitleStyle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="@dimen/track_dot_margin_horizontal"
+        android:text="@string/track_info_separator"
+        app:layout_constraintBottom_toBottomOf="@id/artistName"
+        app:layout_constraintEnd_toStartOf="@id/trackTime"
+        app:layout_constraintStart_toEndOf="@id/artistName"
+        app:layout_constraintTop_toTopOf="@id/artistName" />
+
+    <TextView
+        android:id="@+id/trackTime"
+        style="@style/TrackSubtitleStyle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintBottom_toBottomOf="@id/artistName"
+        app:layout_constraintEnd_toStartOf="@id/trackChevron"
+        app:layout_constraintStart_toEndOf="@id/trackDot"
+        app:layout_constraintTop_toTopOf="@id/artistName"
+        tools:text="5:01" />
+
+    <ImageView
+        android:id="@+id/trackChevron"
+        android:layout_width="@dimen/track_chevron_size"
+        android:layout_height="@dimen/track_chevron_size"
+        android:contentDescription="@null"
+        android:src="@drawable/ic_arrow_forward_24"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

@@ -2,4 +2,5 @@
 <resources>
     <color name="main_activity_background">@color/black</color>
     <color name="search_field_background">@color/white</color>
+    <color name="track_title">@color/white</color>
 </resources>
