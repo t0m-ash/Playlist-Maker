@@ -42,11 +42,11 @@
             android:text="@string/dark_theme" />
 
         <com.google.android.material.switchmaterial.SwitchMaterial
+            android:id="@+id/themeSwitcher"
             style="@style/SwitchStyle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginEnd="12dp"
-            android:checked="true"
             tools:ignore="UseSwitchCompatOrMaterialXml" />
 
     </LinearLayout>
