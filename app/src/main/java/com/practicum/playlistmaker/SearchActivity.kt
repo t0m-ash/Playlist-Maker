@@ -2,51 +2,42 @@ package com.practicum.playlistmaker
 
 import android.os.Bundle
 import android.view.View
+import android.view.inputmethod.EditorInfo
 import android.view.inputmethod.InputMethodManager
+import android.widget.Button
 import android.widget.EditText
 import android.widget.ImageButton
 import android.widget.ImageView
+import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.widget.addTextChangedListener
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import retrofit2.Call
+import retrofit2.Callback
+import retrofit2.Response
+import retrofit2.Retrofit
+import retrofit2.converter.gson.GsonConverterFactory
 
 class SearchActivity : AppCompatActivity() {
-    private lateinit var searchEditText: EditText
-    private var searchText: String = SEARCH_VALUE
 
-    private val tracks = listOf(
-        Track(
-            trackName = "Smells Like Teen Spirit",
-            artistName = "Nirvana",
-            trackTime = "5:01",
-            artworkUrl100 = "https://is5-ssl.mzstatic.com/image/thumb/Music115/v4/7b/58/c2/7b58c21a-2b51-2bb2-e59a-9bb9b96ad8c3/00602567924166.rgb.jpg/100x100bb.jpg"
-        ),
-        Track(
-            trackName = "Billie Jean",
-            artistName = "Michael Jackson",
-            trackTime = "4:35",
-            artworkUrl100 = "https://is5-ssl.mzstatic.com/image/thumb/Music125/v4/3d/9d/38/3d9d3811-71f0-3a0e-1ada-3004e56ff852/827969428726.jpg/100x100bb.jpg"
-        ),
-        Track(
-            trackName = "Stayin' Alive",
-            artistName = "Bee Gees",
-            trackTime = "4:10",
-            artworkUrl100 = "https://is4-ssl.mzstatic.com/image/thumb/Music115/v4/1f/80/1f/1f801fc1-8c0f-ea3e-d3e5-387c6619619e/16UMGIM86640.rgb.jpg/100x100bb.jpg"
-        ),
-        Track(
-            trackName = "Whole Lotta Love",
-            artistName = "Led Zeppelin",
-            trackTime = "5:33",
-            artworkUrl100 = "https://is2-ssl.mzstatic.com/image/thumb/Music62/v4/7e/17/e3/7e17e33f-2efa-2a36-e916-7f808576cf6b/mzm.fyigqcbs.jpg/100x100bb.jpg"
-        ),
-        Track(
-            trackName = "Sweet Child O'Mine",
-            artistName = "Guns N' Roses",
-            trackTime = "5:03",
-            artworkUrl100 = "https://is5-ssl.mzstatic.com/image/thumb/Music125/v4/a0/4d/c4/a04dc484-03cc-02aa-fa82-5334fcb4bc16/18UMGIM24878.rgb.jpg/100x100bb.jpg"
-        )
-    )
+    private lateinit var searchEditText: EditText
+    private lateinit var tracksRecyclerView: RecyclerView
+    private lateinit var placeholderLayout: View
+    private lateinit var placeholderImage: ImageView
+    private lateinit var placeholderMessage: TextView
+    private lateinit var refreshButton: Button
+
+    private val trackAdapter = TrackAdapter()
+
+    private var searchText: String = SEARCH_VALUE
+    private var lastQuery: String = ""
+
+    private val retrofit = Retrofit.Builder()
+        .baseUrl(ITUNES_BASE_URL)
+        .addConverterFactory(GsonConverterFactory.create())
+        .build()
+    private val itunesService = retrofit.create(ItunesApi::class.java)
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -56,9 +47,14 @@ class SearchActivity : AppCompatActivity() {
         searchEditText = findViewById(R.id.searchEditText)
         val clearButton = findViewById<ImageView>(R.id.clearIcon)
 
-        val tracksRecyclerView = findViewById<RecyclerView>(R.id.tracksRecyclerView)
+        tracksRecyclerView = findViewById(R.id.tracksRecyclerView)
         tracksRecyclerView.layoutManager = LinearLayoutManager(this)
-        tracksRecyclerView.adapter = TrackAdapter(tracks)
+        tracksRecyclerView.adapter = trackAdapter
+
+        placeholderLayout = findViewById(R.id.placeholderLayout)
+        placeholderImage = findViewById(R.id.placeholderImage)
+        placeholderMessage = findViewById(R.id.placeholderMessage)
+        refreshButton = findViewById(R.id.refreshButton)
 
         btnBack.setOnClickListener {
             finish()
@@ -66,10 +62,13 @@ class SearchActivity : AppCompatActivity() {
 
         clearButton.setOnClickListener {
             searchEditText.setText("")
-            val inputMethodManager =
-                getSystemService(INPUT_METHOD_SERVICE) as? InputMethodManager
-            inputMethodManager?.hideSoftInputFromWindow(searchEditText.windowToken, 0)
-            searchEditText.clearFocus()
+            hideKeyboard()
+            trackAdapter.tracks = emptyList()
+            hidePlaceholder()
+        }
+
+        refreshButton.setOnClickListener {
+            search(lastQuery)
         }
 
         searchEditText.addTextChangedListener(
@@ -80,6 +79,84 @@ class SearchActivity : AppCompatActivity() {
                 searchText = s?.toString().orEmpty()
             }
         )
+
+        searchEditText.setOnEditorActionListener { _, actionId, _ ->
+            if (actionId == EditorInfo.IME_ACTION_DONE) {
+                search(searchEditText.text.toString())
+                true
+            } else {
+                false
+            }
+        }
+    }
+
+    private fun search(query: String) {
+        if (query.isBlank()) return
+
+        lastQuery = query
+        hidePlaceholder()
+
+        itunesService.search(query).enqueue(object : Callback<TracksResponse> {
+            override fun onResponse(
+                call: Call<TracksResponse>,
+                response: Response<TracksResponse>,
+            ) {
+                if (response.isSuccessful) {
+                    val results = response.body()?.results.orEmpty()
+                    if (results.isNotEmpty()) {
+                        showResults(results)
+                    } else {
+                        showNothingFound()
+                    }
+                } else {
+                    showServerError()
+                }
+            }
+
+            override fun onFailure(call: Call<TracksResponse>, t: Throwable) {
+                showServerError()
+            }
+        })
+    }
+
+    private fun showResults(results: List<Track>) {
+        hidePlaceholder()
+        trackAdapter.tracks = results
+        tracksRecyclerView.visibility = View.VISIBLE
+    }
+
+    private fun showNothingFound() {
+        showPlaceholder(
+            message = getString(R.string.search_nothing_found),
+            image = R.drawable.ic_nothing_found,
+            showRefresh = false,
+        )
+    }
+
+    private fun showServerError() {
+        showPlaceholder(
+            message = getString(R.string.search_connection_problem),
+            image = R.drawable.ic_connection_problem,
+            showRefresh = true,
+        )
+    }
+
+    private fun showPlaceholder(message: String, image: Int, showRefresh: Boolean) {
+        trackAdapter.tracks = emptyList()
+        tracksRecyclerView.visibility = View.GONE
+        placeholderImage.setImageResource(image)
+        placeholderMessage.text = message
+        refreshButton.visibility = if (showRefresh) View.VISIBLE else View.GONE
+        placeholderLayout.visibility = View.VISIBLE
+    }
+
+    private fun hidePlaceholder() {
+        placeholderLayout.visibility = View.GONE
+    }
+
+    private fun hideKeyboard() {
+        val inputMethodManager = getSystemService(INPUT_METHOD_SERVICE) as? InputMethodManager
+        inputMethodManager?.hideSoftInputFromWindow(searchEditText.windowToken, 0)
     }
 
     private fun clearButtonVisibility(s: CharSequence?): Int {
@@ -103,5 +180,6 @@ class SearchActivity : AppCompatActivity() {
     companion object {
         private const val SEARCH_STRING_KEY = "SEARCH_STRING"
         private const val SEARCH_VALUE = ""
+        private const val ITUNES_BASE_URL = "https://itunes.apple.com"
     }
 }

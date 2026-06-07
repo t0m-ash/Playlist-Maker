@@ -3,4 +3,6 @@
     <color name="main_activity_background">@color/black</color>
     <color name="search_field_background">@color/white</color>
     <color name="track_title">@color/white</color>
+    <color name="action_button_background">@color/white</color>
+    <color name="action_button_text">@color/black</color>
 </resources>
