@@ -8,14 +8,14 @@ class SearchHistory(private val sharedPreferences: SharedPreferences) {
 
     private val gson = Gson()
 
-    fun getTracks(): ArrayList<Track> {
+    fun getTracks(): List<Track> {
         val json = sharedPreferences.getString(HISTORY_KEY, null) ?: return arrayListOf()
-        val type = object : TypeToken<ArrayList<Track>>() {}.type
+        val type = object : TypeToken<List<Track>>() {}.type
         return gson.fromJson(json, type) ?: arrayListOf()
     }
 
     fun addTrack(track: Track) {
-        val tracks = getTracks()
+        val tracks = getTracks().toMutableList()
         tracks.removeAll { it.trackId == track.trackId }
         tracks.add(0, track)
         while (tracks.size > MAX_HISTORY_SIZE) {
