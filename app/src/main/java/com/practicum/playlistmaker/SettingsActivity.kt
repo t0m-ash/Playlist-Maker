@@ -5,6 +5,7 @@ import android.net.Uri
 import android.os.Bundle
 import android.widget.ImageButton
 import androidx.appcompat.app.AppCompatActivity
+import com.google.android.material.switchmaterial.SwitchMaterial
 
 class SettingsActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -15,6 +16,13 @@ class SettingsActivity : AppCompatActivity() {
         val btnShareApp = findViewById<ImageButton>(R.id.btn_share_app)
         val btnWriteSupport = findViewById<ImageButton>(R.id.btn_write_support)
         val btnUserAgreement = findViewById<ImageButton>(R.id.btn_user_agreement)
+        val themeSwitcher = findViewById<SwitchMaterial>(R.id.themeSwitcher)
+
+        val app = application as App
+        themeSwitcher.isChecked = app.darkTheme
+        themeSwitcher.setOnCheckedChangeListener { _, isChecked ->
+            app.switchTheme(isChecked)
+        }
 
         btnBack.setOnClickListener {
             finish()

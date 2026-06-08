@@ -28,7 +28,17 @@ class SearchActivity : AppCompatActivity() {
     private lateinit var placeholderMessage: TextView
     private lateinit var refreshButton: Button
 
-    private val trackAdapter = TrackAdapter()
+    private lateinit var searchHistory: SearchHistory
+    private lateinit var searchHistoryLayout: View
+    private lateinit var historyRecyclerView: RecyclerView
+
+    private val trackAdapter = TrackAdapter { track ->
+        searchHistory.addTrack(track)
+    }
+    private val historyAdapter = TrackAdapter { track ->
+        searchHistory.addTrack(track)
+        renderHistory()
+    }
 
     private var searchText: String = SEARCH_VALUE
     private var lastQuery: String = ""
@@ -43,6 +53,8 @@ class SearchActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_search)
 
+        searchHistory = SearchHistory(getSharedPreferences(App.PREFS_NAME, MODE_PRIVATE))
+
         val btnBack = findViewById<ImageButton>(R.id.btn_back)
         searchEditText = findViewById(R.id.searchEditText)
         val clearButton = findViewById<ImageView>(R.id.clearIcon)
@@ -50,6 +62,12 @@ class SearchActivity : AppCompatActivity() {
         tracksRecyclerView = findViewById(R.id.tracksRecyclerView)
         tracksRecyclerView.layoutManager = LinearLayoutManager(this)
         tracksRecyclerView.adapter = trackAdapter
+
+        searchHistoryLayout = findViewById(R.id.searchHistoryLayout)
+        historyRecyclerView = findViewById(R.id.historyRecyclerView)
+        historyRecyclerView.layoutManager = LinearLayoutManager(this)
+        historyRecyclerView.adapter = historyAdapter
+        val clearHistoryButton = findViewById<Button>(R.id.clearHistoryButton)
 
         placeholderLayout = findViewById(R.id.placeholderLayout)
         placeholderImage = findViewById(R.id.placeholderImage)
@@ -65,6 +83,13 @@ class SearchActivity : AppCompatActivity() {
             hideKeyboard()
             trackAdapter.tracks = emptyList()
             hidePlaceholder()
+            renderHistory()
+        }
+
+        clearHistoryButton.setOnClickListener {
+            searchHistory.clear()
+            historyAdapter.tracks = emptyList()
+            searchHistoryLayout.visibility = View.GONE
         }
 
         refreshButton.setOnClickListener {
@@ -77,8 +102,13 @@ class SearchActivity : AppCompatActivity() {
             },
             afterTextChanged = { s ->
                 searchText = s?.toString().orEmpty()
+                renderHistory()
             }
         )
+
+        searchEditText.setOnFocusChangeListener { _, _ ->
+            renderHistory()
+        }
 
         searchEditText.setOnEditorActionListener { _, actionId, _ ->
             if (actionId == EditorInfo.IME_ACTION_DONE) {
@@ -88,6 +118,8 @@ class SearchActivity : AppCompatActivity() {
                 false
             }
         }
+
+        renderHistory()
     }
 
     private fun search(query: String) {
@@ -121,6 +153,7 @@ class SearchActivity : AppCompatActivity() {
 
     private fun showResults(results: List<Track>) {
         hidePlaceholder()
+        searchHistoryLayout.visibility = View.GONE
         trackAdapter.tracks = results
         tracksRecyclerView.visibility = View.VISIBLE
     }
@@ -142,6 +175,7 @@ class SearchActivity : AppCompatActivity() {
     }
 
     private fun showPlaceholder(message: String, image: Int, showRefresh: Boolean) {
+        searchHistoryLayout.visibility = View.GONE
         trackAdapter.tracks = emptyList()
         tracksRecyclerView.visibility = View.GONE
         placeholderImage.setImageResource(image)
@@ -152,6 +186,22 @@ class SearchActivity : AppCompatActivity() {
 
     private fun hidePlaceholder() {
         placeholderLayout.visibility = View.GONE
+    }
+
+    private fun renderHistory() {
+        val tracks = searchHistory.getTracks()
+        val shouldShow = searchEditText.hasFocus() &&
+            searchEditText.text.isEmpty() &&
+            tracks.isNotEmpty()
+
+        if (shouldShow) {
+            historyAdapter.tracks = tracks
+            hidePlaceholder()
+            tracksRecyclerView.visibility = View.GONE
+            searchHistoryLayout.visibility = View.VISIBLE
+        } else {
+            searchHistoryLayout.visibility = View.GONE
+        }
     }
 
     private fun hideKeyboard() {

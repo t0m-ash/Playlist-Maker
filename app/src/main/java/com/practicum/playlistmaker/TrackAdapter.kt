@@ -5,7 +5,9 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import java.util.Collections.emptyList
 
-class TrackAdapter : RecyclerView.Adapter<TrackViewHolder>() {
+class TrackAdapter(
+    private val onTrackClick: (Track) -> Unit,
+) : RecyclerView.Adapter<TrackViewHolder>() {
 
     var tracks: List<Track> = emptyList()
         @SuppressLint("NotifyDataSetChanged")
@@ -19,7 +21,9 @@ class TrackAdapter : RecyclerView.Adapter<TrackViewHolder>() {
     }
 
     override fun onBindViewHolder(holder: TrackViewHolder, position: Int) {
-        holder.bind(tracks[position])
+        val track = tracks[position]
+        holder.bind(track)
+        holder.itemView.setOnClickListener { onTrackClick(track) }
     }
 
     override fun getItemCount(): Int = tracks.size
