@@ -5,4 +5,6 @@
     <color name="track_title">@color/white</color>
     <color name="action_button_background">@color/white</color>
     <color name="action_button_text">@color/black</color>
+    <color name="player_control_background">#40FFFFFF</color>
+    <color name="cover_placeholder_background">#2A2A2E</color>
 </resources>
