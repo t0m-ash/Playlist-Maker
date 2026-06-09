@@ -51,4 +51,17 @@
     <dimen name="text_size_13">13sp</dimen>
     <dimen name="search_history_title_margin_top">42dp</dimen>
     <dimen name="search_history_clear_margin_top">24dp</dimen>
+
+    <dimen name="text_size_18">18sp</dimen>
+    <dimen name="player_content_margin_horizontal">24dp</dimen>
+    <dimen name="player_cover_margin_top">24dp</dimen>
+    <dimen name="player_cover_corner_radius">8dp</dimen>
+    <dimen name="player_title_margin_top">24dp</dimen>
+    <dimen name="player_artist_margin_top">12dp</dimen>
+    <dimen name="player_controls_margin_top">30dp</dimen>
+    <dimen name="player_play_size">84dp</dimen>
+    <dimen name="player_secondary_button_size">51dp</dimen>
+    <dimen name="player_progress_margin_top">8dp</dimen>
+    <dimen name="player_info_margin_top">30dp</dimen>
+    <dimen name="player_info_row_margin_top">16dp</dimen>
 </resources>

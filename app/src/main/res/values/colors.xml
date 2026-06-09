@@ -15,4 +15,6 @@
     <color name="track_subtitle">@color/text_gray</color>
     <color name="action_button_background">@color/black</color>
     <color name="action_button_text">@color/white</color>
+    <color name="player_control_background">#401A1B22</color>
+    <color name="cover_placeholder_background">@color/light_gray</color>
 </resources>

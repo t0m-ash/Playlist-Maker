@@ -125,6 +125,53 @@
         <item name="android:gravity">center</item>
     </style>
 
+    <style name="ShapeAppearanceOverlay.Player.Cover" parent="">
+        <item name="cornerFamily">rounded</item>
+        <item name="cornerSize">@dimen/player_cover_corner_radius</item>
+    </style>
+
+    <style name="PlayerTrackNameStyle">
+        <item name="android:textColor">@color/track_title</item>
+        <item name="android:fontFamily">@font/ys_display_medium</item>
+        <item name="android:textSize">@dimen/text_size_22</item>
+        <item name="android:textFontWeight">500</item>
+        <item name="android:maxLines">2</item>
+        <item name="android:ellipsize">end</item>
+    </style>
+
+    <style name="PlayerArtistNameStyle">
+        <item name="android:textColor">@color/track_title</item>
+        <item name="android:fontFamily">@font/ys_display_medium</item>
+        <item name="android:textSize">@dimen/text_size_14</item>
+        <item name="android:textFontWeight">500</item>
+        <item name="android:maxLines">1</item>
+        <item name="android:ellipsize">end</item>
+    </style>
+
+    <style name="PlayerProgressStyle">
+        <item name="android:textColor">@color/track_title</item>
+        <item name="android:fontFamily">@font/ys_display_medium</item>
+        <item name="android:textSize">@dimen/text_size_14</item>
+        <item name="android:textFontWeight">500</item>
+    </style>
+
+    <style name="PlayerInfoLabelStyle">
+        <item name="android:textColor">@color/text_gray</item>
+        <item name="android:fontFamily">@font/ys_display_regular</item>
+        <item name="android:textSize">@dimen/text_size_13</item>
+        <item name="android:textFontWeight">400</item>
+    </style>
+
+    <style name="PlayerInfoValueStyle">
+        <item name="android:textColor">@color/track_title</item>
+        <item name="android:fontFamily">@font/ys_display_regular</item>
+        <item name="android:textSize">@dimen/text_size_13</item>
+        <item name="android:textFontWeight">400</item>
+        <item name="android:maxLines">1</item>
+        <item name="android:ellipsize">end</item>
+        <item name="android:gravity">end</item>
+    </style>
+
     <style name="ActionButtonStyle" parent="Widget.MaterialComponents.Button.UnelevatedButton">
         <item name="android:layout_width">wrap_content</item>
         <item name="android:layout_height">wrap_content</item>

@@ -1,5 +1,6 @@
 package com.practicum.playlistmaker
 
+import android.content.Intent
 import android.os.Bundle
 import android.view.View
 import android.view.inputmethod.EditorInfo
@@ -13,6 +14,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.widget.addTextChangedListener
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.google.gson.Gson
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -34,10 +36,12 @@ class SearchActivity : AppCompatActivity() {
 
     private val trackAdapter = TrackAdapter { track ->
         searchHistory.addTrack(track)
+        openPlayer(track)
     }
     private val historyAdapter = TrackAdapter { track ->
         searchHistory.addTrack(track)
         renderHistory()
+        openPlayer(track)
     }
 
     private var searchText: String = SEARCH_VALUE
@@ -202,6 +206,12 @@ class SearchActivity : AppCompatActivity() {
         } else {
             searchHistoryLayout.visibility = View.GONE
         }
+    }
+
+    private fun openPlayer(track: Track) {
+        val intent = Intent(this, AudioPlayerActivity::class.java)
+        intent.putExtra(AudioPlayerActivity.EXTRA_TRACK, Gson().toJson(track))
+        startActivity(intent)
     }
 
     private fun hideKeyboard() {
