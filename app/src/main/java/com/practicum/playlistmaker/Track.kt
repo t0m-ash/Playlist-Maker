@@ -13,6 +13,7 @@ data class Track(
     val releaseDate: String?,
     val primaryGenreName: String?,
     val country: String?,
+    val previewUrl: String?,
 ) {
     val trackTime: String
         get() = SimpleDateFormat("mm:ss", Locale.getDefault()).format(trackTimeMillis ?: 0L)

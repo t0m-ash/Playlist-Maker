@@ -64,4 +64,7 @@
     <dimen name="player_progress_margin_top">8dp</dimen>
     <dimen name="player_info_margin_top">30dp</dimen>
     <dimen name="player_info_row_margin_top">16dp</dimen>
+
+    <dimen name="search_progress_size">44dp</dimen>
+    <dimen name="search_progress_margin_top">140dp</dimen>
 </resources>

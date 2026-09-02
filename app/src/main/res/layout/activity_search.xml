@@ -55,6 +55,12 @@
             android:clipToPadding="false"
             tools:listitem="@layout/item_track" />
 
+        <ProgressBar
+            android:id="@+id/progressBar"
+            style="@style/SearchProgressBarStyle"
+            android:visibility="gone"
+            tools:visibility="visible" />
+
         <LinearLayout
             android:id="@+id/searchHistoryLayout"
             android:layout_width="match_parent"

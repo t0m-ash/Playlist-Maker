@@ -184,4 +184,12 @@
         <item name="cornerRadius">@dimen/main_btn_radius_16</item>
         <item name="android:textFontWeight">500</item>
     </style>
+
+    <style name="SearchProgressBarStyle" parent="Widget.AppCompat.ProgressBar">
+        <item name="android:layout_width">@dimen/search_progress_size</item>
+        <item name="android:layout_height">@dimen/search_progress_size</item>
+        <item name="android:layout_gravity">center_horizontal</item>
+        <item name="android:layout_marginTop">@dimen/search_progress_margin_top</item>
+        <item name="android:indeterminateTint">@color/blue</item>
+    </style>
 </resources>
