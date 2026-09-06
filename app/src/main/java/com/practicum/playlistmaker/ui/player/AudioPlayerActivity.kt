@@ -1,6 +1,6 @@
-package com.practicum.playlistmaker
+package com.practicum.playlistmaker.ui.player
 
-import android.media.MediaPlayer
+import android.os.Build
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
@@ -10,22 +10,22 @@ import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.isVisible
 import com.bumptech.glide.Glide
-import com.google.gson.Gson
-import java.text.SimpleDateFormat
-import java.util.Locale
+import com.practicum.playlistmaker.Creator
+import com.practicum.playlistmaker.R
+import com.practicum.playlistmaker.domain.models.PlayerState
+import com.practicum.playlistmaker.domain.models.Track
 
 class AudioPlayerActivity : AppCompatActivity() {
 
     private lateinit var playButton: ImageButton
     private lateinit var progressView: TextView
 
-    private val mediaPlayer = MediaPlayer()
-    private var playerState = PlayerState.DEFAULT
+    private val playerInteractor = Creator.providePlayerInteractor()
 
     private val handler = Handler(Looper.getMainLooper())
     private val progressRunnable = object : Runnable {
         override fun run() {
-            progressView.text = formatProgress(mediaPlayer.currentPosition)
+            progressView.text = playerInteractor.getCurrentPosition()
             handler.postDelayed(this, PROGRESS_UPDATE_DELAY)
         }
     }
@@ -34,8 +34,7 @@ class AudioPlayerActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_audio_player)
 
-        val track = intent.getStringExtra(EXTRA_TRACK)
-            ?.let { Gson().fromJson(it, Track::class.java) }
+        val track = readTrack()
 
         if (track == null) {
             finish()
@@ -65,7 +64,7 @@ class AudioPlayerActivity : AppCompatActivity() {
 
         val cover = findViewById<ImageView>(R.id.playerCover)
         Glide.with(this)
-            .load(track.getCoverArtwork())
+            .load(track.coverArtworkUrl)
             .placeholder(R.drawable.ic_player_placeholder)
             .error(R.drawable.ic_player_placeholder)
             .into(cover)
@@ -86,52 +85,57 @@ class AudioPlayerActivity : AppCompatActivity() {
     override fun onDestroy() {
         super.onDestroy()
         handler.removeCallbacks(progressRunnable)
-        mediaPlayer.release()
+        playerInteractor.release()
     }
 
-    private fun preparePlayer(previewUrl: String?) {
-        if (previewUrl.isNullOrEmpty()) return
+    private fun readTrack(): Track? =
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            intent.getSerializableExtra(EXTRA_TRACK, Track::class.java)
+        } else {
+            @Suppress("DEPRECATION")
+            intent.getSerializableExtra(EXTRA_TRACK) as? Track
+        }
 
-        mediaPlayer.setDataSource(previewUrl)
-        mediaPlayer.prepareAsync()
-        mediaPlayer.setOnPreparedListener {
-            playerState = PlayerState.PREPARED
-            playButton.isEnabled = true
-        }
-        mediaPlayer.setOnCompletionListener {
-            playerState = PlayerState.PREPARED
-            handler.removeCallbacks(progressRunnable)
-            renderPlayButton()
-            progressView.text = getString(R.string.player_progress_start)
-        }
+    private fun preparePlayer(previewUrl: String) {
+        playerInteractor.preparePlayer(
+            previewUrl = previewUrl,
+            onPrepared = {
+                playButton.isEnabled = true
+            },
+            onCompletion = {
+                handler.removeCallbacks(progressRunnable)
+                renderPlayButton()
+                progressView.text = getString(R.string.player_progress_start)
+            },
+        )
     }
 
     private fun playbackControl() {
-        when (playerState) {
-            PlayerState.PLAYING -> pausePlayer()
-            PlayerState.PREPARED, PlayerState.PAUSED -> startPlayer()
-            PlayerState.DEFAULT -> Unit
+        when (playerInteractor.playbackControl()) {
+            PlayerState.PLAYING -> {
+                renderPlayButton()
+                handler.post(progressRunnable)
+            }
+
+            PlayerState.PAUSED -> {
+                renderPlayButton()
+                handler.removeCallbacks(progressRunnable)
+            }
+
+            PlayerState.DEFAULT, PlayerState.PREPARED -> Unit
         }
     }
 
-    private fun startPlayer() {
-        mediaPlayer.start()
-        playerState = PlayerState.PLAYING
-        renderPlayButton()
-        handler.post(progressRunnable)
-    }
-
     private fun pausePlayer() {
-        if (playerState != PlayerState.PLAYING) return
+        if (playerInteractor.getState() != PlayerState.PLAYING) return
 
-        mediaPlayer.pause()
-        playerState = PlayerState.PAUSED
+        playerInteractor.pause()
         renderPlayButton()
         handler.removeCallbacks(progressRunnable)
     }
 
     private fun renderPlayButton() {
-        if (playerState == PlayerState.PLAYING) {
+        if (playerInteractor.getState() == PlayerState.PLAYING) {
             playButton.setImageResource(R.drawable.ic_player_pause)
             playButton.contentDescription = getString(R.string.player_pause_description)
         } else {
@@ -140,25 +144,15 @@ class AudioPlayerActivity : AppCompatActivity() {
         }
     }
 
-    private fun formatProgress(positionMillis: Int): String =
-        SimpleDateFormat("mm:ss", Locale.getDefault()).format(positionMillis)
-
-    private fun bindOptionalRow(labelId: Int, valueId: Int, value: String?) {
+    private fun bindOptionalRow(labelId: Int, valueId: Int, value: String) {
         val label = findViewById<TextView>(labelId)
         val valueView = findViewById<TextView>(valueId)
-        if (value.isNullOrEmpty()) {
+        if (value.isEmpty()) {
             label.isVisible = false
             valueView.isVisible = false
         } else {
             valueView.text = value
         }
-    }
-
-    private enum class PlayerState {
-        DEFAULT,
-        PREPARED,
-        PLAYING,
-        PAUSED,
     }
 
     companion object {

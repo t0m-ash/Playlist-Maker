@@ -1,4 +1,4 @@
-package com.practicum.playlistmaker
+package com.practicum.playlistmaker.ui.search
 
 import android.content.Intent
 import android.os.Bundle
@@ -18,12 +18,12 @@ import androidx.core.view.isVisible
 import androidx.core.widget.addTextChangedListener
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.google.gson.Gson
-import retrofit2.Call
-import retrofit2.Callback
-import retrofit2.Response
-import retrofit2.Retrofit
-import retrofit2.converter.gson.GsonConverterFactory
+import com.practicum.playlistmaker.Creator
+import com.practicum.playlistmaker.R
+import com.practicum.playlistmaker.domain.api.TracksInteractor
+import com.practicum.playlistmaker.domain.models.Track
+import com.practicum.playlistmaker.presentation.TrackAdapter
+import com.practicum.playlistmaker.ui.player.AudioPlayerActivity
 
 class SearchActivity : AppCompatActivity() {
 
@@ -35,19 +35,21 @@ class SearchActivity : AppCompatActivity() {
     private lateinit var refreshButton: Button
     private lateinit var progressBar: ProgressBar
 
-    private lateinit var searchHistory: SearchHistory
     private lateinit var searchHistoryLayout: View
     private lateinit var historyRecyclerView: RecyclerView
 
+    private val tracksInteractor = Creator.provideTracksInteractor()
+    private val searchHistoryInteractor by lazy { Creator.provideSearchHistoryInteractor(this) }
+
     private val trackAdapter = TrackAdapter { track ->
         if (clickDebounce()) {
-            searchHistory.addTrack(track)
+            searchHistoryInteractor.addTrack(track)
             openPlayer(track)
         }
     }
     private val historyAdapter = TrackAdapter { track ->
         if (clickDebounce()) {
-            searchHistory.addTrack(track)
+            searchHistoryInteractor.addTrack(track)
             renderHistory()
             openPlayer(track)
         }
@@ -60,17 +62,21 @@ class SearchActivity : AppCompatActivity() {
     private val searchRunnable = Runnable { search(searchEditText.text.toString()) }
     private var isClickAllowed = true
 
-    private val retrofit = Retrofit.Builder()
-        .baseUrl(ITUNES_BASE_URL)
-        .addConverterFactory(GsonConverterFactory.create())
-        .build()
-    private val itunesService = retrofit.create(ItunesApi::class.java)
+    private val searchConsumer = object : TracksInteractor.TracksConsumer {
+        override fun consume(foundTracks: List<Track>?) {
+            handler.post {
+                when {
+                    foundTracks == null -> showServerError()
+                    foundTracks.isEmpty() -> showNothingFound()
+                    else -> showResults(foundTracks)
+                }
+            }
+        }
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_search)
-
-        searchHistory = SearchHistory(getSharedPreferences(App.PREFS_NAME, MODE_PRIVATE))
 
         val btnBack = findViewById<ImageButton>(R.id.btn_back)
         searchEditText = findViewById(R.id.searchEditText)
@@ -104,7 +110,7 @@ class SearchActivity : AppCompatActivity() {
         }
 
         clearHistoryButton.setOnClickListener {
-            searchHistory.clear()
+            searchHistoryInteractor.clear()
             historyAdapter.tracks = emptyList()
             searchHistoryLayout.isVisible = false
         }
@@ -170,27 +176,7 @@ class SearchActivity : AppCompatActivity() {
         lastQuery = query
         showLoading()
 
-        itunesService.search(query).enqueue(object : Callback<TracksResponse> {
-            override fun onResponse(
-                call: Call<TracksResponse>,
-                response: Response<TracksResponse>,
-            ) {
-                if (response.isSuccessful) {
-                    val results = response.body()?.results.orEmpty()
-                    if (results.isNotEmpty()) {
-                        showResults(results)
-                    } else {
-                        showNothingFound()
-                    }
-                } else {
-                    showServerError()
-                }
-            }
-
-            override fun onFailure(call: Call<TracksResponse>, t: Throwable) {
-                showServerError()
-            }
-        })
+        tracksInteractor.searchTracks(query, searchConsumer)
     }
 
     private fun showLoading() {
@@ -248,7 +234,7 @@ class SearchActivity : AppCompatActivity() {
     }
 
     private fun renderHistory() {
-        val tracks = searchHistory.getTracks()
+        val tracks = searchHistoryInteractor.getTracks()
         val shouldShow = searchEditText.hasFocus() &&
             searchEditText.text.isEmpty() &&
             tracks.isNotEmpty()
@@ -265,7 +251,7 @@ class SearchActivity : AppCompatActivity() {
 
     private fun openPlayer(track: Track) {
         val intent = Intent(this, AudioPlayerActivity::class.java)
-        intent.putExtra(AudioPlayerActivity.EXTRA_TRACK, Gson().toJson(track))
+        intent.putExtra(AudioPlayerActivity.EXTRA_TRACK, track)
         startActivity(intent)
     }
 
@@ -287,7 +273,6 @@ class SearchActivity : AppCompatActivity() {
     companion object {
         private const val SEARCH_STRING_KEY = "SEARCH_STRING"
         private const val SEARCH_VALUE = ""
-        private const val ITUNES_BASE_URL = "https://itunes.apple.com"
         private const val SEARCH_DEBOUNCE_DELAY = 2000L
         private const val CLICK_DEBOUNCE_DELAY = 1000L
     }

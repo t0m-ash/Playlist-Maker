@@ -1,4 +1,4 @@
-package com.practicum.playlistmaker
+package com.practicum.playlistmaker.presentation
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
@@ -8,6 +8,8 @@ import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.resource.bitmap.CenterCrop
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners
+import com.practicum.playlistmaker.R
+import com.practicum.playlistmaker.domain.models.Track
 
 class TrackViewHolder(parent: ViewGroup) : RecyclerView.ViewHolder(
     LayoutInflater.from(parent.context).inflate(R.layout.item_track, parent, false)
@@ -25,7 +27,7 @@ class TrackViewHolder(parent: ViewGroup) : RecyclerView.ViewHolder(
         val cornerRadius =
             itemView.resources.getDimensionPixelSize(R.dimen.track_artwork_corner_radius)
         Glide.with(itemView)
-            .load(track.artworkUrl100)
+            .load(track.artworkUrl)
             .placeholder(R.drawable.ic_placeholder)
             .error(R.drawable.ic_placeholder)
             .transform(CenterCrop(), RoundedCorners(cornerRadius))
