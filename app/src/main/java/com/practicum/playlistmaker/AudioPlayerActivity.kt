@@ -4,11 +4,11 @@ import android.media.MediaPlayer
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
-import android.view.View
 import android.widget.ImageButton
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.view.isVisible
 import com.bumptech.glide.Glide
 import com.google.gson.Gson
 import java.text.SimpleDateFormat
@@ -20,7 +20,7 @@ class AudioPlayerActivity : AppCompatActivity() {
     private lateinit var progressView: TextView
 
     private val mediaPlayer = MediaPlayer()
-    private var playerState = STATE_DEFAULT
+    private var playerState = PlayerState.DEFAULT
 
     private val handler = Handler(Looper.getMainLooper())
     private val progressRunnable = object : Runnable {
@@ -95,11 +95,11 @@ class AudioPlayerActivity : AppCompatActivity() {
         mediaPlayer.setDataSource(previewUrl)
         mediaPlayer.prepareAsync()
         mediaPlayer.setOnPreparedListener {
-            playerState = STATE_PREPARED
+            playerState = PlayerState.PREPARED
             playButton.isEnabled = true
         }
         mediaPlayer.setOnCompletionListener {
-            playerState = STATE_PREPARED
+            playerState = PlayerState.PREPARED
             handler.removeCallbacks(progressRunnable)
             renderPlayButton()
             progressView.text = getString(R.string.player_progress_start)
@@ -108,29 +108,30 @@ class AudioPlayerActivity : AppCompatActivity() {
 
     private fun playbackControl() {
         when (playerState) {
-            STATE_PLAYING -> pausePlayer()
-            STATE_PREPARED, STATE_PAUSED -> startPlayer()
+            PlayerState.PLAYING -> pausePlayer()
+            PlayerState.PREPARED, PlayerState.PAUSED -> startPlayer()
+            PlayerState.DEFAULT -> Unit
         }
     }
 
     private fun startPlayer() {
         mediaPlayer.start()
-        playerState = STATE_PLAYING
+        playerState = PlayerState.PLAYING
         renderPlayButton()
         handler.post(progressRunnable)
     }
 
     private fun pausePlayer() {
-        if (playerState != STATE_PLAYING) return
+        if (playerState != PlayerState.PLAYING) return
 
         mediaPlayer.pause()
-        playerState = STATE_PAUSED
+        playerState = PlayerState.PAUSED
         renderPlayButton()
         handler.removeCallbacks(progressRunnable)
     }
 
     private fun renderPlayButton() {
-        if (playerState == STATE_PLAYING) {
+        if (playerState == PlayerState.PLAYING) {
             playButton.setImageResource(R.drawable.ic_player_pause)
             playButton.contentDescription = getString(R.string.player_pause_description)
         } else {
@@ -146,20 +147,22 @@ class AudioPlayerActivity : AppCompatActivity() {
         val label = findViewById<TextView>(labelId)
         val valueView = findViewById<TextView>(valueId)
         if (value.isNullOrEmpty()) {
-            label.visibility = View.GONE
-            valueView.visibility = View.GONE
+            label.isVisible = false
+            valueView.isVisible = false
         } else {
             valueView.text = value
         }
     }
 
+    private enum class PlayerState {
+        DEFAULT,
+        PREPARED,
+        PLAYING,
+        PAUSED,
+    }
+
     companion object {
         const val EXTRA_TRACK = "extra_track"
-
-        private const val STATE_DEFAULT = 0
-        private const val STATE_PREPARED = 1
-        private const val STATE_PLAYING = 2
-        private const val STATE_PAUSED = 3
 
         private const val PROGRESS_UPDATE_DELAY = 300L
     }
