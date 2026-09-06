@@ -1,4 +1,4 @@
-package com.practicum.playlistmaker
+package com.practicum.playlistmaker.ui.settings
 
 import android.content.Intent
 import android.net.Uri
@@ -6,8 +6,14 @@ import android.os.Bundle
 import android.widget.ImageButton
 import androidx.appcompat.app.AppCompatActivity
 import com.google.android.material.switchmaterial.SwitchMaterial
+import com.practicum.playlistmaker.App
+import com.practicum.playlistmaker.Creator
+import com.practicum.playlistmaker.R
 
 class SettingsActivity : AppCompatActivity() {
+
+    private val settingsInteractor by lazy { Creator.provideSettingsInteractor(this) }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_settings)
@@ -18,10 +24,10 @@ class SettingsActivity : AppCompatActivity() {
         val btnUserAgreement = findViewById<ImageButton>(R.id.btn_user_agreement)
         val themeSwitcher = findViewById<SwitchMaterial>(R.id.themeSwitcher)
 
-        val app = application as App
-        themeSwitcher.isChecked = app.darkTheme
+        themeSwitcher.isChecked = settingsInteractor.isDarkThemeEnabled()
         themeSwitcher.setOnCheckedChangeListener { _, isChecked ->
-            app.switchTheme(isChecked)
+            settingsInteractor.updateDarkTheme(isChecked)
+            App.applyTheme(isChecked)
         }
 
         btnBack.setOnClickListener {
