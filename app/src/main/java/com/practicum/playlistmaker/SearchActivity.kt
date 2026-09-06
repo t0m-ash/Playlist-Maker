@@ -2,6 +2,8 @@ package com.practicum.playlistmaker
 
 import android.content.Intent
 import android.os.Bundle
+import android.os.Handler
+import android.os.Looper
 import android.view.View
 import android.view.inputmethod.EditorInfo
 import android.view.inputmethod.InputMethodManager
@@ -9,8 +11,10 @@ import android.widget.Button
 import android.widget.EditText
 import android.widget.ImageButton
 import android.widget.ImageView
+import android.widget.ProgressBar
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.view.isVisible
 import androidx.core.widget.addTextChangedListener
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -29,23 +33,32 @@ class SearchActivity : AppCompatActivity() {
     private lateinit var placeholderImage: ImageView
     private lateinit var placeholderMessage: TextView
     private lateinit var refreshButton: Button
+    private lateinit var progressBar: ProgressBar
 
     private lateinit var searchHistory: SearchHistory
     private lateinit var searchHistoryLayout: View
     private lateinit var historyRecyclerView: RecyclerView
 
     private val trackAdapter = TrackAdapter { track ->
-        searchHistory.addTrack(track)
-        openPlayer(track)
+        if (clickDebounce()) {
+            searchHistory.addTrack(track)
+            openPlayer(track)
+        }
     }
     private val historyAdapter = TrackAdapter { track ->
-        searchHistory.addTrack(track)
-        renderHistory()
-        openPlayer(track)
+        if (clickDebounce()) {
+            searchHistory.addTrack(track)
+            renderHistory()
+            openPlayer(track)
+        }
     }
 
     private var searchText: String = SEARCH_VALUE
     private var lastQuery: String = ""
+
+    private val handler = Handler(Looper.getMainLooper())
+    private val searchRunnable = Runnable { search(searchEditText.text.toString()) }
+    private var isClickAllowed = true
 
     private val retrofit = Retrofit.Builder()
         .baseUrl(ITUNES_BASE_URL)
@@ -77,6 +90,7 @@ class SearchActivity : AppCompatActivity() {
         placeholderImage = findViewById(R.id.placeholderImage)
         placeholderMessage = findViewById(R.id.placeholderMessage)
         refreshButton = findViewById(R.id.refreshButton)
+        progressBar = findViewById(R.id.progressBar)
 
         btnBack.setOnClickListener {
             finish()
@@ -85,15 +99,14 @@ class SearchActivity : AppCompatActivity() {
         clearButton.setOnClickListener {
             searchEditText.setText("")
             hideKeyboard()
-            trackAdapter.tracks = emptyList()
-            hidePlaceholder()
+            clearResults()
             renderHistory()
         }
 
         clearHistoryButton.setOnClickListener {
             searchHistory.clear()
             historyAdapter.tracks = emptyList()
-            searchHistoryLayout.visibility = View.GONE
+            searchHistoryLayout.isVisible = false
         }
 
         refreshButton.setOnClickListener {
@@ -102,10 +115,15 @@ class SearchActivity : AppCompatActivity() {
 
         searchEditText.addTextChangedListener(
             onTextChanged = { s, _, _, _ ->
-                clearButton.visibility = clearButtonVisibility(s)
+                clearButton.isVisible = !s.isNullOrEmpty()
             },
             afterTextChanged = { s ->
                 searchText = s?.toString().orEmpty()
+                if (searchText.isBlank()) {
+                    clearResults()
+                } else {
+                    searchDebounce()
+                }
                 renderHistory()
             }
         )
@@ -116,6 +134,7 @@ class SearchActivity : AppCompatActivity() {
 
         searchEditText.setOnEditorActionListener { _, actionId, _ ->
             if (actionId == EditorInfo.IME_ACTION_DONE) {
+                handler.removeCallbacks(searchRunnable)
                 search(searchEditText.text.toString())
                 true
             } else {
@@ -126,11 +145,30 @@ class SearchActivity : AppCompatActivity() {
         renderHistory()
     }
 
+    override fun onDestroy() {
+        super.onDestroy()
+        handler.removeCallbacksAndMessages(null)
+    }
+
+    private fun searchDebounce() {
+        handler.removeCallbacks(searchRunnable)
+        handler.postDelayed(searchRunnable, SEARCH_DEBOUNCE_DELAY)
+    }
+
+    private fun clickDebounce(): Boolean {
+        val current = isClickAllowed
+        if (isClickAllowed) {
+            isClickAllowed = false
+            handler.postDelayed({ isClickAllowed = true }, CLICK_DEBOUNCE_DELAY)
+        }
+        return current
+    }
+
     private fun search(query: String) {
         if (query.isBlank()) return
 
         lastQuery = query
-        hidePlaceholder()
+        showLoading()
 
         itunesService.search(query).enqueue(object : Callback<TracksResponse> {
             override fun onResponse(
@@ -155,11 +193,19 @@ class SearchActivity : AppCompatActivity() {
         })
     }
 
-    private fun showResults(results: List<Track>) {
+    private fun showLoading() {
         hidePlaceholder()
-        searchHistoryLayout.visibility = View.GONE
+        searchHistoryLayout.isVisible = false
+        tracksRecyclerView.isVisible = false
+        progressBar.isVisible = true
+    }
+
+    private fun showResults(results: List<Track>) {
+        progressBar.isVisible = false
+        hidePlaceholder()
+        searchHistoryLayout.isVisible = false
         trackAdapter.tracks = results
-        tracksRecyclerView.visibility = View.VISIBLE
+        tracksRecyclerView.isVisible = true
     }
 
     private fun showNothingFound() {
@@ -179,17 +225,26 @@ class SearchActivity : AppCompatActivity() {
     }
 
     private fun showPlaceholder(message: String, image: Int, showRefresh: Boolean) {
-        searchHistoryLayout.visibility = View.GONE
+        progressBar.isVisible = false
+        searchHistoryLayout.isVisible = false
         trackAdapter.tracks = emptyList()
-        tracksRecyclerView.visibility = View.GONE
+        tracksRecyclerView.isVisible = false
         placeholderImage.setImageResource(image)
         placeholderMessage.text = message
-        refreshButton.visibility = if (showRefresh) View.VISIBLE else View.GONE
-        placeholderLayout.visibility = View.VISIBLE
+        refreshButton.isVisible = showRefresh
+        placeholderLayout.isVisible = true
     }
 
     private fun hidePlaceholder() {
-        placeholderLayout.visibility = View.GONE
+        placeholderLayout.isVisible = false
+    }
+
+    private fun clearResults() {
+        handler.removeCallbacks(searchRunnable)
+        progressBar.isVisible = false
+        trackAdapter.tracks = emptyList()
+        tracksRecyclerView.isVisible = false
+        hidePlaceholder()
     }
 
     private fun renderHistory() {
@@ -201,10 +256,10 @@ class SearchActivity : AppCompatActivity() {
         if (shouldShow) {
             historyAdapter.tracks = tracks
             hidePlaceholder()
-            tracksRecyclerView.visibility = View.GONE
-            searchHistoryLayout.visibility = View.VISIBLE
+            tracksRecyclerView.isVisible = false
+            searchHistoryLayout.isVisible = true
         } else {
-            searchHistoryLayout.visibility = View.GONE
+            searchHistoryLayout.isVisible = false
         }
     }
 
@@ -217,14 +272,6 @@ class SearchActivity : AppCompatActivity() {
     private fun hideKeyboard() {
         val inputMethodManager = getSystemService(INPUT_METHOD_SERVICE) as? InputMethodManager
         inputMethodManager?.hideSoftInputFromWindow(searchEditText.windowToken, 0)
-    }
-
-    private fun clearButtonVisibility(s: CharSequence?): Int {
-        return if (s.isNullOrEmpty()) {
-            View.GONE
-        } else {
-            View.VISIBLE
-        }
     }
 
     override fun onRestoreInstanceState(savedInstanceState: Bundle) {
@@ -241,5 +288,7 @@ class SearchActivity : AppCompatActivity() {
         private const val SEARCH_STRING_KEY = "SEARCH_STRING"
         private const val SEARCH_VALUE = ""
         private const val ITUNES_BASE_URL = "https://itunes.apple.com"
+        private const val SEARCH_DEBOUNCE_DELAY = 2000L
+        private const val CLICK_DEBOUNCE_DELAY = 1000L
     }
 }

@@ -26,7 +26,9 @@
     <string name="player_add_to_playlist_description">Добавить в плейлист</string>
     <string name="player_play_description">Воспроизвести</string>
     <string name="player_favorite_description">Добавить в избранное</string>
-    <string name="player_progress_default">0:30</string>
+    <string name="player_progress_default">00:30</string>
+    <string name="player_pause_description">Пауза</string>
+    <string name="player_progress_start">00:00</string>
     <string name="player_duration">Длительность</string>
     <string name="player_album">Альбом</string>
     <string name="player_year">Год</string>
