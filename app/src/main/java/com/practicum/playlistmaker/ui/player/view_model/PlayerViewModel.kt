@@ -5,10 +5,6 @@ import android.os.Looper
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import androidx.lifecycle.ViewModelProvider
-import androidx.lifecycle.viewmodel.initializer
-import androidx.lifecycle.viewmodel.viewModelFactory
-import com.practicum.playlistmaker.creator.Creator
 import com.practicum.playlistmaker.domain.models.Track
 import com.practicum.playlistmaker.domain.player.PlayerInteractor
 import com.practicum.playlistmaker.domain.player.models.PlayerState
@@ -89,14 +85,5 @@ class PlayerViewModel(
     companion object {
         private const val PROGRESS_UPDATE_DELAY = 300L
         private const val DEFAULT_PROGRESS = "00:00"
-
-        fun getFactory(track: Track): ViewModelProvider.Factory = viewModelFactory {
-            initializer {
-                PlayerViewModel(
-                    track = track,
-                    playerInteractor = Creator.providePlayerInteractor(),
-                )
-            }
-        }
     }
 }

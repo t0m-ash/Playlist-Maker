@@ -5,18 +5,22 @@ import android.os.Bundle
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.isVisible
-import androidx.lifecycle.ViewModelProvider
 import com.bumptech.glide.Glide
 import com.practicum.playlistmaker.R
 import com.practicum.playlistmaker.databinding.ActivityAudioPlayerBinding
 import com.practicum.playlistmaker.domain.models.Track
 import com.practicum.playlistmaker.ui.player.models.PlayerScreenState
 import com.practicum.playlistmaker.ui.player.view_model.PlayerViewModel
+import org.koin.androidx.viewmodel.ext.android.viewModel
+import org.koin.core.parameter.parametersOf
 
 class AudioPlayerActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityAudioPlayerBinding
-    private lateinit var viewModel: PlayerViewModel
+
+    private var track: Track? = null
+
+    private val viewModel: PlayerViewModel by viewModel { parametersOf(track) }
 
     private var isTrackRendered = false
 
@@ -25,16 +29,11 @@ class AudioPlayerActivity : AppCompatActivity() {
         binding = ActivityAudioPlayerBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        val track = readTrack()
+        track = readTrack()
         if (track == null) {
             finish()
             return
         }
-
-        viewModel = ViewModelProvider(
-            this,
-            PlayerViewModel.getFactory(track),
-        )[PlayerViewModel::class.java]
 
         viewModel.observeScreenState().observe(this) { state -> render(state) }
 
@@ -44,7 +43,7 @@ class AudioPlayerActivity : AppCompatActivity() {
 
     override fun onPause() {
         super.onPause()
-        if (::viewModel.isInitialized) {
+        if (track != null) {
             viewModel.onPause()
         }
     }
