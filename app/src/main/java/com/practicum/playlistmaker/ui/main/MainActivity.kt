@@ -2,40 +2,31 @@ package com.practicum.playlistmaker.ui.main
 
 import android.content.Intent
 import android.os.Bundle
-import android.view.View
 import androidx.appcompat.app.AppCompatActivity
-import com.google.android.material.button.MaterialButton
-import com.practicum.playlistmaker.R
+import com.practicum.playlistmaker.databinding.ActivityMainBinding
 import com.practicum.playlistmaker.ui.library.LibraryActivity
 import com.practicum.playlistmaker.ui.search.SearchActivity
 import com.practicum.playlistmaker.ui.settings.SettingsActivity
 
 class MainActivity : AppCompatActivity() {
+
+    private lateinit var binding: ActivityMainBinding
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_main)
+        binding = ActivityMainBinding.inflate(layoutInflater)
+        setContentView(binding.root)
 
-        val btnSearch = findViewById<MaterialButton>(R.id.btn_search)
-        val btnLibrary = findViewById<MaterialButton>(R.id.btn_library)
-        val btnSettings = findViewById<MaterialButton>(R.id.btn_settings)
-
-        val btnSearchClickListener: View.OnClickListener = object : View.OnClickListener {
-            override fun onClick(v: View?) {
-                val searchIntent = Intent(this@MainActivity, SearchActivity::class.java)
-                startActivity(searchIntent)
-            }
+        binding.btnSearch.setOnClickListener {
+            startActivity(Intent(this, SearchActivity::class.java))
         }
 
-        btnSearch.setOnClickListener(btnSearchClickListener)
-
-        btnLibrary.setOnClickListener {
-            val libraryIntent = Intent(this, LibraryActivity::class.java)
-            startActivity(libraryIntent)
+        binding.btnLibrary.setOnClickListener {
+            startActivity(Intent(this, LibraryActivity::class.java))
         }
 
-        btnSettings.setOnClickListener {
-            val settingsIntent = Intent(this, SettingsActivity::class.java)
-            startActivity(settingsIntent)
+        binding.btnSettings.setOnClickListener {
+            startActivity(Intent(this, SettingsActivity::class.java))
         }
     }
 }
