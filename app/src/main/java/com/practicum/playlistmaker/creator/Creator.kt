@@ -1,10 +1,12 @@
 package com.practicum.playlistmaker.creator
 
 import android.content.Context
+import android.content.SharedPreferences
 import com.google.gson.reflect.TypeToken
 import com.practicum.playlistmaker.data.NetworkClient
 import com.practicum.playlistmaker.data.StorageClient
 import com.practicum.playlistmaker.data.dto.TrackHistoryDto
+import com.practicum.playlistmaker.data.network.ItunesApi
 import com.practicum.playlistmaker.data.network.RetrofitNetworkClient
 import com.practicum.playlistmaker.data.player.PlayerRepositoryImpl
 import com.practicum.playlistmaker.data.search.SearchHistoryRepositoryImpl
@@ -13,6 +15,7 @@ import com.practicum.playlistmaker.data.settings.SettingsRepositoryImpl
 import com.practicum.playlistmaker.data.sharing.ExternalNavigatorImpl
 import com.practicum.playlistmaker.data.sharing.SharingRepositoryImpl
 import com.practicum.playlistmaker.data.storage.PrefsStorageClient
+import com.practicum.playlistmaker.data.storage.appPreferences
 import com.practicum.playlistmaker.domain.player.PlayerInteractor
 import com.practicum.playlistmaker.domain.player.PlayerRepository
 import com.practicum.playlistmaker.domain.player.impl.PlayerInteractorImpl
@@ -29,8 +32,12 @@ import com.practicum.playlistmaker.domain.sharing.ExternalNavigator
 import com.practicum.playlistmaker.domain.sharing.SharingInteractor
 import com.practicum.playlistmaker.domain.sharing.SharingRepository
 import com.practicum.playlistmaker.domain.sharing.impl.SharingInteractorImpl
+import retrofit2.Retrofit
+import retrofit2.converter.gson.GsonConverterFactory
 
 object Creator {
+
+    private const val ITUNES_BASE_URL = "https://itunes.apple.com"
 
     private const val HISTORY_KEY = "search_history"
 
@@ -40,7 +47,19 @@ object Creator {
         appContext = context.applicationContext
     }
 
-    private val networkClient: NetworkClient by lazy { RetrofitNetworkClient(appContext) }
+    private val itunesService: ItunesApi by lazy {
+        Retrofit.Builder()
+            .baseUrl(ITUNES_BASE_URL)
+            .addConverterFactory(GsonConverterFactory.create())
+            .build()
+            .create(ItunesApi::class.java)
+    }
+
+    private val prefs: SharedPreferences by lazy { appPreferences(appContext) }
+
+    private val networkClient: NetworkClient by lazy {
+        RetrofitNetworkClient(appContext, itunesService)
+    }
 
     private fun getTracksRepository(): TracksRepository = TracksRepositoryImpl(networkClient)
 
@@ -49,7 +68,7 @@ object Creator {
 
     private fun getHistoryStorageClient(): StorageClient<ArrayList<TrackHistoryDto>> =
         PrefsStorageClient(
-            context = appContext,
+            prefs = prefs,
             dataKey = HISTORY_KEY,
             type = object : TypeToken<ArrayList<TrackHistoryDto>>() {}.type,
         )
@@ -60,7 +79,8 @@ object Creator {
     fun provideSearchHistoryInteractor(): SearchHistoryInteractor =
         SearchHistoryInteractorImpl(getSearchHistoryRepository())
 
-    private fun getSettingsRepository(): SettingsRepository = SettingsRepositoryImpl(appContext)
+    private fun getSettingsRepository(): SettingsRepository =
+        SettingsRepositoryImpl(appContext, prefs)
 
     fun provideSettingsInteractor(): SettingsInteractor =
         SettingsInteractorImpl(getSettingsRepository())
