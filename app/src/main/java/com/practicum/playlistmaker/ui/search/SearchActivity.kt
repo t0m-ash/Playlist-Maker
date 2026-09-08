@@ -2,15 +2,12 @@ package com.practicum.playlistmaker.ui.search
 
 import android.content.Intent
 import android.os.Bundle
-import android.os.Handler
-import android.os.Looper
 import android.text.Editable
 import android.text.TextWatcher
 import android.view.inputmethod.EditorInfo
 import android.view.inputmethod.InputMethodManager
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.isVisible
-import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.practicum.playlistmaker.R
 import com.practicum.playlistmaker.databinding.ActivitySearchBinding
@@ -18,19 +15,17 @@ import com.practicum.playlistmaker.domain.models.Track
 import com.practicum.playlistmaker.ui.player.AudioPlayerActivity
 import com.practicum.playlistmaker.ui.search.models.SearchState
 import com.practicum.playlistmaker.ui.search.view_model.SearchViewModel
+import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class SearchActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivitySearchBinding
-    private lateinit var viewModel: SearchViewModel
+    private val viewModel: SearchViewModel by viewModel()
 
-    private val trackAdapter = TrackAdapter { track -> onTrackClicked(track) }
-    private val historyAdapter = TrackAdapter { track -> onTrackClicked(track) }
+    private val trackAdapter = TrackAdapter { track -> viewModel.onTrackClicked(track) }
+    private val historyAdapter = TrackAdapter { track -> viewModel.onTrackClicked(track) }
 
     private var textWatcher: TextWatcher? = null
-
-    private val handler = Handler(Looper.getMainLooper())
-    private var isClickAllowed = true
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -43,8 +38,9 @@ class SearchActivity : AppCompatActivity() {
         binding.historyRecyclerView.layoutManager = LinearLayoutManager(this)
         binding.historyRecyclerView.adapter = historyAdapter
 
-        viewModel = ViewModelProvider(this, SearchViewModel.getFactory())[SearchViewModel::class.java]
         viewModel.observeState().observe(this) { state -> render(state) }
+
+        viewModel.observeShowPlayer().observe(this) { track -> openPlayer(track) }
 
         binding.btnBack.setOnClickListener { finish() }
 
@@ -86,7 +82,6 @@ class SearchActivity : AppCompatActivity() {
     override fun onDestroy() {
         super.onDestroy()
         textWatcher?.let { binding.searchEditText.removeTextChangedListener(it) }
-        handler.removeCallbacksAndMessages(null)
     }
 
     override fun onSaveInstanceState(outState: Bundle) {
@@ -175,26 +170,10 @@ class SearchActivity : AppCompatActivity() {
         }
     }
 
-    private fun onTrackClicked(track: Track) {
-        if (!clickDebounce()) return
-
-        viewModel.onTrackClicked(track)
-        openPlayer(track)
-    }
-
     private fun openPlayer(track: Track) {
         val intent = Intent(this, AudioPlayerActivity::class.java)
         intent.putExtra(AudioPlayerActivity.EXTRA_TRACK, track)
         startActivity(intent)
-    }
-
-    private fun clickDebounce(): Boolean {
-        val current = isClickAllowed
-        if (isClickAllowed) {
-            isClickAllowed = false
-            handler.postDelayed({ isClickAllowed = true }, CLICK_DEBOUNCE_DELAY)
-        }
-        return current
     }
 
     private fun hideKeyboard() {
@@ -205,6 +184,5 @@ class SearchActivity : AppCompatActivity() {
     companion object {
         private const val SEARCH_STRING_KEY = "SEARCH_STRING"
         private const val SEARCH_VALUE = ""
-        private const val CLICK_DEBOUNCE_DELAY = 1000L
     }
 }

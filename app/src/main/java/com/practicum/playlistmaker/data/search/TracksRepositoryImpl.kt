@@ -7,7 +7,10 @@ import com.practicum.playlistmaker.domain.models.Track
 import com.practicum.playlistmaker.domain.search.TracksRepository
 import com.practicum.playlistmaker.util.Resource
 
-class TracksRepositoryImpl(private val networkClient: NetworkClient) : TracksRepository {
+class TracksRepositoryImpl(
+    private val networkClient: NetworkClient,
+    private val trackMapper: TrackMapper,
+) : TracksRepository {
 
     override fun searchTracks(expression: String): Resource<List<Track>> {
         val response = networkClient.doRequest(TracksSearchRequest(expression))
@@ -16,7 +19,7 @@ class TracksRepositoryImpl(private val networkClient: NetworkClient) : TracksRep
             return Resource.Error()
         }
 
-        return Resource.Success(response.results.orEmpty().map { TrackMapper.toDomain(it) })
+        return Resource.Success(response.results.orEmpty().map { trackMapper.toDomain(it) })
     }
 
     companion object {

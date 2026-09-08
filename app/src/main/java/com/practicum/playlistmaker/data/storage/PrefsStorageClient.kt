@@ -7,11 +7,10 @@ import java.lang.reflect.Type
 
 class PrefsStorageClient<T>(
     private val prefs: SharedPreferences,
+    private val gson: Gson,
     private val dataKey: String,
     private val type: Type,
 ) : StorageClient<T> {
-
-    private val gson = Gson()
 
     override fun storeData(data: T) {
         prefs.edit()

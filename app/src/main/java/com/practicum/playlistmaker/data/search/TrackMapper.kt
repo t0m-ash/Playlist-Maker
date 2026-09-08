@@ -6,7 +6,7 @@ import com.practicum.playlistmaker.domain.models.Track
 import java.text.SimpleDateFormat
 import java.util.Locale
 
-object TrackMapper {
+class TrackMapper {
 
     fun toDomain(dto: TrackDto): Track = Track(
         trackId = dto.trackId ?: 0L,

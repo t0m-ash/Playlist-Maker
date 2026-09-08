@@ -4,9 +4,11 @@ import com.practicum.playlistmaker.domain.player.PlayerInteractor
 import com.practicum.playlistmaker.domain.player.PlayerRepository
 import com.practicum.playlistmaker.domain.player.models.PlayerState
 import java.text.SimpleDateFormat
-import java.util.Locale
 
-class PlayerInteractorImpl(private val repository: PlayerRepository) : PlayerInteractor {
+class PlayerInteractorImpl(
+    private val repository: PlayerRepository,
+    private val trackTimeFormat: SimpleDateFormat,
+) : PlayerInteractor {
 
     override fun getState(): PlayerState = repository.getState()
 
@@ -36,5 +38,5 @@ class PlayerInteractorImpl(private val repository: PlayerRepository) : PlayerInt
     }
 
     override fun getCurrentPosition(): String =
-        SimpleDateFormat("mm:ss", Locale.getDefault()).format(repository.getCurrentPositionMillis())
+        trackTimeFormat.format(repository.getCurrentPositionMillis())
 }

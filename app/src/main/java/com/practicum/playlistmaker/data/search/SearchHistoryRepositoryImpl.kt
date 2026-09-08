@@ -7,13 +7,14 @@ import com.practicum.playlistmaker.domain.search.SearchHistoryRepository
 
 class SearchHistoryRepositoryImpl(
     private val storage: StorageClient<ArrayList<TrackHistoryDto>>,
+    private val trackMapper: TrackMapper,
 ) : SearchHistoryRepository {
 
     override fun getTracks(): List<Track> =
-        storage.getData().orEmpty().map { TrackMapper.toDomain(it) }
+        storage.getData().orEmpty().map { trackMapper.toDomain(it) }
 
     override fun saveTracks(tracks: List<Track>) {
-        storage.storeData(ArrayList(tracks.map { TrackMapper.toHistoryDto(it) }))
+        storage.storeData(ArrayList(tracks.map { trackMapper.toHistoryDto(it) }))
     }
 
     override fun clear() {
