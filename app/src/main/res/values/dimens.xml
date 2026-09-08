@@ -1,8 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <dimen name="main_btn_start">16dp</dimen>
-    <dimen name="main_btn_top">16dp</dimen>
-    <dimen name="main_btn_end">16dp</dimen>
     <dimen name="text_size_22">22sp</dimen>
     <dimen name="text_size_16">16sp</dimen>
     <dimen name="row_settings">61dp</dimen>
@@ -76,4 +73,10 @@
     <dimen name="library_new_playlist_height">36dp</dimen>
     <dimen name="library_new_playlist_radius">54dp</dimen>
     <dimen name="library_playlists_placeholder_margin_top">46dp</dimen>
+
+    <dimen name="text_size_12">12sp</dimen>
+    <dimen name="bottom_navigation_height">56dp</dimen>
+    <dimen name="bottom_navigation_icon_size">24dp</dimen>
+    <dimen name="bottom_navigation_divider_height">0.5dp</dimen>
+    <dimen name="top_bar_title_margin_start">16dp</dimen>
 </resources>
