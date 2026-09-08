@@ -67,4 +67,13 @@
 
     <dimen name="search_progress_size">44dp</dimen>
     <dimen name="search_progress_margin_top">140dp</dimen>
+
+    <dimen name="library_tab_height">48dp</dimen>
+    <dimen name="library_tab_indicator_height">2dp</dimen>
+    <dimen name="library_tab_indicator_inset">16dp</dimen>
+    <dimen name="library_placeholder_margin_top">106dp</dimen>
+    <dimen name="library_new_playlist_margin_top">24dp</dimen>
+    <dimen name="library_new_playlist_height">36dp</dimen>
+    <dimen name="library_new_playlist_radius">54dp</dimen>
+    <dimen name="library_playlists_placeholder_margin_top">46dp</dimen>
 </resources>

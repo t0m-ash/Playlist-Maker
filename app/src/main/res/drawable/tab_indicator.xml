@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<inset xmlns:android="http://schemas.android.com/apk/res/android"
+    android:insetLeft="@dimen/library_tab_indicator_inset"
+    android:insetRight="@dimen/library_tab_indicator_inset">
+
+    <shape android:shape="rectangle">
+        <size android:height="@dimen/library_tab_indicator_height" />
+        <solid android:color="@color/tab_indicator" />
+    </shape>
+</inset>
