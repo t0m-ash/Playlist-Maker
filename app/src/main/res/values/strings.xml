@@ -21,6 +21,13 @@
     <string name="search_history_title">Вы искали</string>
     <string name="search_history_clear">Очистить историю</string>
 
+    <string name="library_favorite_tracks_tab">Избранные треки</string>
+    <string name="library_playlists_tab">Плейлисты</string>
+    <string name="library_empty_favorites">Ваша медиатека пуста</string>
+    <string name="library_empty_playlists">Вы не создали\nни одного плейлиста</string>
+    <string name="library_new_playlist">Новый плейлист</string>
+    <string name="library_back_description">Назад</string>
+
     <string name="player_back_description">Назад</string>
     <string name="player_cover_description">Обложка альбома</string>
     <string name="player_add_to_playlist_description">Добавить в плейлист</string>
