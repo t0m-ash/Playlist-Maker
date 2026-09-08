@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="main_activity_background">@color/black</color>
     <color name="search_field_background">@color/white</color>
     <color name="track_title">@color/white</color>
     <color name="action_button_background">@color/white</color>
@@ -9,4 +8,7 @@
     <color name="cover_placeholder_background">#2A2A2E</color>
     <color name="tab_text">@color/white</color>
     <color name="tab_indicator">@color/white</color>
+    <color name="bottom_navigation_background">@color/black</color>
+    <color name="bottom_navigation_unselected">@color/white</color>
+    <color name="bottom_navigation_divider">@color/white</color>
 </resources>
