@@ -73,6 +73,7 @@
     <dimen name="library_new_playlist_height">36dp</dimen>
     <dimen name="library_new_playlist_radius">54dp</dimen>
     <dimen name="library_playlists_placeholder_margin_top">46dp</dimen>
+    <dimen name="library_favorites_list_padding_top">16dp</dimen>
 
     <dimen name="text_size_12">12sp</dimen>
     <dimen name="bottom_navigation_height">56dp</dimen>

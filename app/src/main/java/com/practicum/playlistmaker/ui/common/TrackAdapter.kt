@@ -1,4 +1,4 @@
-package com.practicum.playlistmaker.ui.search
+package com.practicum.playlistmaker.ui.common
 
 import android.annotation.SuppressLint
 import android.view.ViewGroup

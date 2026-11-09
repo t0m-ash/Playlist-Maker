@@ -2,10 +2,13 @@ package com.practicum.playlistmaker.di
 
 import android.content.Context
 import android.media.MediaPlayer
+import androidx.room.Room
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 import com.practicum.playlistmaker.data.NetworkClient
 import com.practicum.playlistmaker.data.StorageClient
+import com.practicum.playlistmaker.data.db.AppDatabase
+import com.practicum.playlistmaker.data.db.TrackDbMapper
 import com.practicum.playlistmaker.data.dto.TrackHistoryDto
 import com.practicum.playlistmaker.data.network.ItunesApi
 import com.practicum.playlistmaker.data.network.RetrofitNetworkClient
@@ -21,6 +24,7 @@ import retrofit2.converter.gson.GsonConverterFactory
 private const val ITUNES_BASE_URL = "https://itunes.apple.com"
 private const val PREFS_NAME = "playlist_maker_prefs"
 private const val HISTORY_KEY = "search_history"
+private const val DATABASE_NAME = "playlist_maker.db"
 
 val dataModule = module {
 
@@ -54,6 +58,13 @@ val dataModule = module {
     }
 
     single { TrackMapper() }
+
+    single { TrackDbMapper() }
+
+    single {
+        Room.databaseBuilder(androidContext(), AppDatabase::class.java, DATABASE_NAME)
+            .build()
+    }
 
     single<ExternalNavigator> {
         ExternalNavigatorImpl(androidContext())
