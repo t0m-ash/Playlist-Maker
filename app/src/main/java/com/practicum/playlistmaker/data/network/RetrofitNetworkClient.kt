@@ -6,13 +6,16 @@ import android.net.NetworkCapabilities
 import com.practicum.playlistmaker.data.NetworkClient
 import com.practicum.playlistmaker.data.dto.Response
 import com.practicum.playlistmaker.data.dto.TracksSearchRequest
+import kotlinx.coroutines.CancellationException
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
 
 class RetrofitNetworkClient(
     private val context: Context,
     private val itunesService: ItunesApi,
 ) : NetworkClient {
 
-    override fun doRequest(dto: Any): Response {
+    override suspend fun doRequest(dto: Any): Response {
         if (!isConnected()) {
             return Response().apply { resultCode = NO_CONNECTION_CODE }
         }
@@ -21,12 +24,14 @@ class RetrofitNetworkClient(
             return Response().apply { resultCode = BAD_REQUEST_CODE }
         }
 
-        return try {
-            val response = itunesService.search(dto.term).execute()
-            val body = response.body() ?: Response()
-            body.apply { resultCode = response.code() }
-        } catch (e: Exception) {
-            Response().apply { resultCode = SERVER_ERROR_CODE }
+        return withContext(Dispatchers.IO) {
+            try {
+                itunesService.search(dto.term).apply { resultCode = Response.SUCCESS_CODE }
+            } catch (e: CancellationException) {
+                throw e
+            } catch (e: Exception) {
+                Response().apply { resultCode = SERVER_ERROR_CODE }
+            }
         }
     }
 

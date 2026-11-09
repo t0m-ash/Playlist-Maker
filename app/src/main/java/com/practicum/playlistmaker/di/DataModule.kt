@@ -17,8 +17,6 @@ import org.koin.android.ext.koin.androidContext
 import org.koin.dsl.module
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
-import java.util.concurrent.ExecutorService
-import java.util.concurrent.Executors
 
 private const val ITUNES_BASE_URL = "https://itunes.apple.com"
 private const val PREFS_NAME = "playlist_maker_prefs"
@@ -39,8 +37,6 @@ val dataModule = module {
     }
 
     factory { Gson() }
-
-    factory<ExecutorService> { Executors.newCachedThreadPool() }
 
     factory { MediaPlayer() }
 

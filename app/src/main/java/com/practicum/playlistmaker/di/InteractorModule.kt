@@ -19,7 +19,7 @@ val interactorModule = module {
     factory { SimpleDateFormat("mm:ss", Locale.getDefault()) }
 
     single<TracksInteractor> {
-        TracksInteractorImpl(get(), get())
+        TracksInteractorImpl(get())
     }
 
     single<SearchHistoryInteractor> {
