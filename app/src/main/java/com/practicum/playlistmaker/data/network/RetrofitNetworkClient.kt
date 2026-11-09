@@ -7,8 +7,6 @@ import com.practicum.playlistmaker.data.NetworkClient
 import com.practicum.playlistmaker.data.dto.Response
 import com.practicum.playlistmaker.data.dto.TracksSearchRequest
 import kotlinx.coroutines.CancellationException
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.withContext
 
 class RetrofitNetworkClient(
     private val context: Context,
@@ -24,14 +22,12 @@ class RetrofitNetworkClient(
             return Response().apply { resultCode = BAD_REQUEST_CODE }
         }
 
-        return withContext(Dispatchers.IO) {
-            try {
-                itunesService.search(dto.term).apply { resultCode = Response.SUCCESS_CODE }
-            } catch (e: CancellationException) {
-                throw e
-            } catch (e: Exception) {
-                Response().apply { resultCode = SERVER_ERROR_CODE }
-            }
+        return try {
+            itunesService.search(dto.term).apply { resultCode = Response.SUCCESS_CODE }
+        } catch (e: CancellationException) {
+            throw e
+        } catch (e: Exception) {
+            Response().apply { resultCode = SERVER_ERROR_CODE }
         }
     }
 
