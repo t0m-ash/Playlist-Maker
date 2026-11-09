@@ -1,21 +1,21 @@
 package com.practicum.playlistmaker.ui.player.view_model
 
-import android.os.Handler
-import android.os.Looper
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import com.practicum.playlistmaker.domain.models.Track
 import com.practicum.playlistmaker.domain.player.PlayerInteractor
 import com.practicum.playlistmaker.domain.player.models.PlayerState
 import com.practicum.playlistmaker.ui.player.models.PlayerScreenState
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 
 class PlayerViewModel(
     track: Track,
     private val playerInteractor: PlayerInteractor,
 ) : ViewModel() {
-
-    private val handler = Handler(Looper.getMainLooper())
 
     private var screenState = PlayerScreenState(
         track = track,
@@ -27,12 +27,7 @@ class PlayerViewModel(
     private val screenStateLiveData = MutableLiveData(screenState)
     fun observeScreenState(): LiveData<PlayerScreenState> = screenStateLiveData
 
-    private val progressRunnable = object : Runnable {
-        override fun run() {
-            updateState { it.copy(progress = playerInteractor.getCurrentPosition()) }
-            handler.postDelayed(this, PROGRESS_UPDATE_DELAY)
-        }
-    }
+    private var progressJob: Job? = null
 
     init {
         playerInteractor.preparePlayer(
@@ -41,7 +36,7 @@ class PlayerViewModel(
                 updateState { it.copy(isPlayEnabled = true) }
             },
             onCompletion = {
-                handler.removeCallbacks(progressRunnable)
+                progressJob?.cancel()
                 updateState { it.copy(isPlaying = false, progress = DEFAULT_PROGRESS) }
             },
         )
@@ -51,13 +46,10 @@ class PlayerViewModel(
         when (playerInteractor.playbackControl()) {
             PlayerState.PLAYING -> {
                 updateState { it.copy(isPlaying = true) }
-                handler.post(progressRunnable)
+                startProgressUpdates()
             }
 
-            PlayerState.PAUSED -> {
-                handler.removeCallbacks(progressRunnable)
-                updateState { it.copy(isPlaying = false) }
-            }
+            PlayerState.PAUSED -> onPlaybackPaused()
 
             PlayerState.DEFAULT, PlayerState.PREPARED -> Unit
         }
@@ -67,19 +59,32 @@ class PlayerViewModel(
         if (playerInteractor.getState() != PlayerState.PLAYING) return
 
         playerInteractor.pause()
-        handler.removeCallbacks(progressRunnable)
-        updateState { it.copy(isPlaying = false) }
+        onPlaybackPaused()
     }
 
     override fun onCleared() {
         super.onCleared()
-        handler.removeCallbacks(progressRunnable)
         playerInteractor.release()
+    }
+
+    private fun startProgressUpdates() {
+        progressJob?.cancel()
+        progressJob = viewModelScope.launch {
+            while (playerInteractor.getState() == PlayerState.PLAYING) {
+                updateState { it.copy(progress = playerInteractor.getCurrentPosition()) }
+                delay(PROGRESS_UPDATE_DELAY)
+            }
+        }
+    }
+
+    private fun onPlaybackPaused() {
+        progressJob?.cancel()
+        updateState { it.copy(isPlaying = false) }
     }
 
     private fun updateState(transform: (PlayerScreenState) -> PlayerScreenState) {
         screenState = transform(screenState)
-        screenStateLiveData.postValue(screenState)
+        screenStateLiveData.value = screenState
     }
 
     companion object {
