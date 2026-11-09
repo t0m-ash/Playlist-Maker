@@ -4,74 +4,26 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/main_activity_background"
     android:orientation="vertical"
-    tools:context=".MainActivity">
+    tools:context=".ui.main.MainActivity">
 
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="@dimen/bar_56"
-        android:gravity="center_vertical">
-
-        <ImageButton
-            android:id="@+id/btn_back"
-            style="@style/TopBarIconButtonStyle"
-            android:src="@drawable/ic_arrow_back_24"
-            android:visibility="gone" />
-
-        <TextView
-            style="@style/TopBarTitleStyle"
-            android:layout_marginStart="16dp"
-            android:text="@string/app_name"
-            android:textColor="@color/white" />
-
-        <ImageButton
-            style="@style/TopBarIconButtonStyle"
-            android:gravity="center_horizontal"
-            android:src="@drawable/ic_filter_24"
-            android:visibility="invisible" />
-    </LinearLayout>
-
-    <com.google.android.material.button.MaterialButton
-        android:id="@+id/btn_search"
-        style="@style/MainButtonStyle"
+    <androidx.fragment.app.FragmentContainerView
+        android:id="@+id/navHostFragment"
+        android:name="androidx.navigation.fragment.NavHostFragment"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_marginStart="@dimen/main_btn_start"
-        android:layout_marginTop="24dp"
-        android:layout_marginEnd="@dimen/main_btn_end"
         android:layout_weight="1"
-        android:text="@string/search"
-        app:icon="@drawable/ic_search_24"
-        app:iconGravity="textStart"
-        app:iconPadding="10dp" />
+        app:defaultNavHost="true"
+        app:navGraph="@navigation/navigation_graph" />
 
-    <com.google.android.material.button.MaterialButton
-        android:id="@+id/btn_library"
-        style="@style/MainButtonStyle"
+    <View
+        android:id="@+id/bottomNavigationDivider"
         android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_marginStart="@dimen/main_btn_start"
-        android:layout_marginTop="@dimen/main_btn_top"
-        android:layout_marginEnd="@dimen/main_btn_end"
-        android:layout_weight="1"
-        android:text="@string/library"
-        app:icon="@drawable/ic_library_24"
-        app:iconGravity="textStart"
-        app:iconPadding="10dp" />
+        android:layout_height="@dimen/bottom_navigation_divider_height"
+        android:background="@color/bottom_navigation_divider" />
 
-    <com.google.android.material.button.MaterialButton
-        android:id="@+id/btn_settings"
-        style="@style/MainButtonStyle"
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_marginStart="@dimen/main_btn_start"
-        android:layout_marginTop="@dimen/main_btn_top"
-        android:layout_marginEnd="@dimen/main_btn_end"
-        android:layout_marginBottom="28dp"
-        android:layout_weight="1"
-        android:text="@string/settings"
-        app:icon="@drawable/ic_settings_24"
-        app:iconGravity="textStart"
-        app:iconPadding="8dp" />
+    <com.google.android.material.bottomnavigation.BottomNavigationView
+        android:id="@+id/bottomNavigationView"
+        style="@style/BottomNavigationViewStyle" />
+
 </LinearLayout>

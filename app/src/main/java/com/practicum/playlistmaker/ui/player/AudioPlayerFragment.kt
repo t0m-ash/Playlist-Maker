@@ -2,50 +2,61 @@ package com.practicum.playlistmaker.ui.player
 
 import android.os.Build
 import android.os.Bundle
+import android.view.LayoutInflater
+import android.view.View
+import android.view.ViewGroup
 import android.widget.TextView
-import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.isVisible
+import androidx.fragment.app.Fragment
+import androidx.navigation.fragment.findNavController
 import com.bumptech.glide.Glide
 import com.practicum.playlistmaker.R
-import com.practicum.playlistmaker.databinding.ActivityAudioPlayerBinding
+import com.practicum.playlistmaker.databinding.FragmentAudioPlayerBinding
 import com.practicum.playlistmaker.domain.models.Track
 import com.practicum.playlistmaker.ui.player.models.PlayerScreenState
 import com.practicum.playlistmaker.ui.player.view_model.PlayerViewModel
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import org.koin.core.parameter.parametersOf
 
-class AudioPlayerActivity : AppCompatActivity() {
+class AudioPlayerFragment : Fragment() {
 
-    private lateinit var binding: ActivityAudioPlayerBinding
+    private var _binding: FragmentAudioPlayerBinding? = null
+    private val binding get() = _binding!!
 
-    private var track: Track? = null
+    private val track: Track by lazy { readTrack() }
 
     private val viewModel: PlayerViewModel by viewModel { parametersOf(track) }
 
     private var isTrackRendered = false
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        binding = ActivityAudioPlayerBinding.inflate(layoutInflater)
-        setContentView(binding.root)
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View {
+        _binding = FragmentAudioPlayerBinding.inflate(inflater, container, false)
+        return binding.root
+    }
 
-        track = readTrack()
-        if (track == null) {
-            finish()
-            return
-        }
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
 
-        viewModel.observeScreenState().observe(this) { state -> render(state) }
+        isTrackRendered = false
 
-        binding.playerBackButton.setOnClickListener { finish() }
+        viewModel.observeScreenState().observe(viewLifecycleOwner) { state -> render(state) }
+
+        binding.playerBackButton.setOnClickListener { findNavController().navigateUp() }
         binding.playerPlayButton.setOnClickListener { viewModel.onPlayButtonClicked() }
     }
 
     override fun onPause() {
         super.onPause()
-        if (track != null) {
-            viewModel.onPause()
-        }
+        viewModel.onPause()
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _binding = null
     }
 
     private fun render(state: PlayerScreenState) {
@@ -96,15 +107,21 @@ class AudioPlayerActivity : AppCompatActivity() {
         }
     }
 
-    private fun readTrack(): Track? =
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-            intent.getSerializableExtra(EXTRA_TRACK, Track::class.java)
+    private fun readTrack(): Track {
+        val arguments = requireArguments()
+        val track = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            arguments.getSerializable(ARGS_TRACK, Track::class.java)
         } else {
             @Suppress("DEPRECATION")
-            intent.getSerializableExtra(EXTRA_TRACK) as? Track
+            arguments.getSerializable(ARGS_TRACK) as? Track
         }
+        return requireNotNull(track) { "AudioPlayerFragment requires a track argument" }
+    }
 
     companion object {
-        const val EXTRA_TRACK = "extra_track"
+        private const val ARGS_TRACK = "track"
+
+        fun createArgs(track: Track): Bundle =
+            Bundle().apply { putSerializable(ARGS_TRACK, track) }
     }
 }

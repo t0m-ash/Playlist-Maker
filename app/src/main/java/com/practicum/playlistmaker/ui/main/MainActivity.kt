@@ -1,12 +1,12 @@
 package com.practicum.playlistmaker.ui.main
 
-import android.content.Intent
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.view.isVisible
+import androidx.navigation.fragment.NavHostFragment
+import androidx.navigation.ui.setupWithNavController
+import com.practicum.playlistmaker.R
 import com.practicum.playlistmaker.databinding.ActivityMainBinding
-import com.practicum.playlistmaker.ui.library.LibraryActivity
-import com.practicum.playlistmaker.ui.search.SearchActivity
-import com.practicum.playlistmaker.ui.settings.SettingsActivity
 
 class MainActivity : AppCompatActivity() {
 
@@ -17,16 +17,16 @@ class MainActivity : AppCompatActivity() {
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        binding.btnSearch.setOnClickListener {
-            startActivity(Intent(this, SearchActivity::class.java))
-        }
+        val navHostFragment =
+            supportFragmentManager.findFragmentById(R.id.navHostFragment) as NavHostFragment
+        val navController = navHostFragment.navController
 
-        binding.btnLibrary.setOnClickListener {
-            startActivity(Intent(this, LibraryActivity::class.java))
-        }
+        binding.bottomNavigationView.setupWithNavController(navController)
 
-        binding.btnSettings.setOnClickListener {
-            startActivity(Intent(this, SettingsActivity::class.java))
+        navController.addOnDestinationChangedListener { _, destination, _ ->
+            val isBottomNavigationVisible = destination.id != R.id.audioPlayerFragment
+            binding.bottomNavigationView.isVisible = isBottomNavigationVisible
+            binding.bottomNavigationDivider.isVisible = isBottomNavigationVisible
         }
     }
 }
