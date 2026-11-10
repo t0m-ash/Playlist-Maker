@@ -13,4 +13,9 @@
     <color name="bottom_navigation_background">@color/black</color>
     <color name="bottom_navigation_unselected">@color/white</color>
     <color name="bottom_navigation_divider">@color/white</color>
+    <color name="bottom_sheet_background">@color/black</color>
+    <color name="bottom_sheet_handle">@color/white</color>
+    <color name="text_field_stroke">@color/white</color>
+    <color name="text_field_hint">@color/white</color>
+    <color name="text_field_label">@color/white</color>
 </resources>

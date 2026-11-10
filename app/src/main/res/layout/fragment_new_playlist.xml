@@ -1,0 +1,139 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".ui.newplaylist.NewPlaylistFragment">
+
+    <LinearLayout
+        android:id="@+id/newPlaylistTopBar"
+        android:layout_width="0dp"
+        android:layout_height="@dimen/bar_56"
+        android:gravity="center_vertical"
+        android:orientation="horizontal"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <ImageButton
+            android:id="@+id/newPlaylistBackButton"
+            android:layout_width="@dimen/ib_with_48"
+            android:layout_height="@dimen/ib_height_48dp"
+            android:layout_margin="@dimen/ib_bar_margin_4"
+            android:background="@android:color/transparent"
+            android:contentDescription="@string/new_playlist_back_description"
+            android:src="@drawable/ic_arrow_back_24"
+            app:tint="@color/track_title" />
+
+        <TextView
+            style="@style/TopBarTitleStyle"
+            android:layout_marginStart="@dimen/new_playlist_title_margin_start"
+            android:text="@string/new_playlist_title" />
+    </LinearLayout>
+
+    <androidx.core.widget.NestedScrollView
+        android:id="@+id/newPlaylistScroll"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:fillViewport="true"
+        app:layout_constraintBottom_toTopOf="@id/newPlaylistCreateButton"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/newPlaylistTopBar">
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingBottom="@dimen/new_playlist_content_padding_bottom">
+
+            <FrameLayout
+                android:id="@+id/newPlaylistCoverContainer"
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                android:layout_marginHorizontal="@dimen/new_playlist_cover_margin_horizontal"
+                android:layout_marginTop="@dimen/new_playlist_cover_margin_top"
+                android:clickable="true"
+                android:contentDescription="@string/new_playlist_add_cover_description"
+                android:focusable="true"
+                app:layout_constraintDimensionRatio="1:1"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent">
+
+                <FrameLayout
+                    android:id="@+id/newPlaylistCoverPlaceholder"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:background="@drawable/bg_playlist_cover_dashed">
+
+                    <ImageView
+                        android:layout_width="@dimen/new_playlist_add_photo_size"
+                        android:layout_height="@dimen/new_playlist_add_photo_size"
+                        android:layout_gravity="center"
+                        android:contentDescription="@null"
+                        android:src="@drawable/ic_add_photo_100" />
+                </FrameLayout>
+
+                <com.google.android.material.imageview.ShapeableImageView
+                    android:id="@+id/newPlaylistCover"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:contentDescription="@string/playlist_cover_description"
+                    android:scaleType="centerCrop"
+                    android:visibility="gone"
+                    app:shapeAppearanceOverlay="@style/ShapeAppearanceOverlay.Playlist.Cover" />
+            </FrameLayout>
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/newPlaylistNameLayout"
+                style="@style/PlaylistTextFieldStyle"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="@dimen/new_playlist_field_margin_horizontal"
+                android:layout_marginTop="@dimen/new_playlist_fields_margin_top"
+                android:hint="@string/new_playlist_name_hint"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/newPlaylistCoverContainer">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/newPlaylistNameEditText"
+                    style="@style/PlaylistEditTextStyle"
+                    android:imeOptions="actionNext" />
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/newPlaylistDescriptionLayout"
+                style="@style/PlaylistTextFieldStyle"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="@dimen/new_playlist_field_margin_horizontal"
+                android:layout_marginTop="@dimen/new_playlist_field_spacing"
+                android:hint="@string/new_playlist_description_hint"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/newPlaylistNameLayout">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/newPlaylistDescriptionEditText"
+                    style="@style/PlaylistEditTextStyle"
+                    android:imeOptions="actionDone" />
+            </com.google.android.material.textfield.TextInputLayout>
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+    </androidx.core.widget.NestedScrollView>
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/newPlaylistCreateButton"
+        style="@style/CreatePlaylistButtonStyle"
+        android:layout_width="0dp"
+        android:layout_marginHorizontal="@dimen/new_playlist_create_margin_horizontal"
+        android:layout_marginBottom="@dimen/new_playlist_create_margin_bottom"
+        android:enabled="false"
+        android:text="@string/new_playlist_create"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

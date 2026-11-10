@@ -5,15 +5,18 @@ import android.media.MediaPlayer
 import androidx.room.Room
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
+import com.practicum.playlistmaker.data.ImageStorage
 import com.practicum.playlistmaker.data.NetworkClient
 import com.practicum.playlistmaker.data.StorageClient
 import com.practicum.playlistmaker.data.db.AppDatabase
+import com.practicum.playlistmaker.data.db.PlaylistDbMapper
 import com.practicum.playlistmaker.data.db.TrackDbMapper
 import com.practicum.playlistmaker.data.dto.TrackHistoryDto
 import com.practicum.playlistmaker.data.network.ItunesApi
 import com.practicum.playlistmaker.data.network.RetrofitNetworkClient
 import com.practicum.playlistmaker.data.search.TrackMapper
 import com.practicum.playlistmaker.data.sharing.ExternalNavigatorImpl
+import com.practicum.playlistmaker.data.storage.AppImageStorage
 import com.practicum.playlistmaker.data.storage.PrefsStorageClient
 import com.practicum.playlistmaker.domain.sharing.ExternalNavigator
 import org.koin.android.ext.koin.androidContext
@@ -25,6 +28,7 @@ private const val ITUNES_BASE_URL = "https://itunes.apple.com"
 private const val PREFS_NAME = "playlist_maker_prefs"
 private const val HISTORY_KEY = "search_history"
 private const val DATABASE_NAME = "playlist_maker.db"
+private const val PLAYLIST_COVERS_DIRECTORY = "playlist_covers"
 
 val dataModule = module {
 
@@ -67,6 +71,16 @@ val dataModule = module {
     }
 
     single { get<AppDatabase>().favoriteTracksDao() }
+
+    single { get<AppDatabase>().playlistsDao() }
+
+    single { get<AppDatabase>().playlistTracksDao() }
+
+    single { PlaylistDbMapper(get()) }
+
+    single<ImageStorage> {
+        AppImageStorage(androidContext(), PLAYLIST_COVERS_DIRECTORY)
+    }
 
     single<ExternalNavigator> {
         ExternalNavigatorImpl(androidContext())

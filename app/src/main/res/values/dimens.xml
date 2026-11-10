@@ -81,4 +81,41 @@
     <dimen name="bottom_navigation_icon_size">24dp</dimen>
     <dimen name="bottom_navigation_divider_height">0.5dp</dimen>
     <dimen name="top_bar_title_margin_start">16dp</dimen>
+
+    <dimen name="playlists_grid_margin_top">16dp</dimen>
+    <dimen name="playlists_grid_padding_horizontal">12dp</dimen>
+    <dimen name="playlist_grid_item_margin_horizontal">4dp</dimen>
+    <dimen name="playlist_grid_item_margin_bottom">16dp</dimen>
+    <dimen name="playlist_grid_info_margin_top">4dp</dimen>
+    <dimen name="playlist_cover_corner_radius">8dp</dimen>
+    <dimen name="playlist_grid_info_line_height">16sp</dimen>
+
+    <dimen name="bottom_sheet_corner_radius">16dp</dimen>
+    <dimen name="bottom_sheet_peek_height">505dp</dimen>
+    <dimen name="bottom_sheet_handle_width">50dp</dimen>
+    <dimen name="bottom_sheet_handle_height">4dp</dimen>
+    <dimen name="bottom_sheet_handle_radius">44dp</dimen>
+    <dimen name="bottom_sheet_handle_margin_top">8dp</dimen>
+    <dimen name="bottom_sheet_title_margin_top">30dp</dimen>
+    <dimen name="bottom_sheet_title_line_height">22sp</dimen>
+    <dimen name="bottom_sheet_button_margin_top">28dp</dimen>
+    <dimen name="bottom_sheet_list_margin_top">24dp</dimen>
+
+    <dimen name="new_playlist_title_margin_start">12dp</dimen>
+    <dimen name="new_playlist_cover_margin_top">26dp</dimen>
+    <dimen name="new_playlist_cover_margin_horizontal">24dp</dimen>
+    <dimen name="new_playlist_cover_dash_width">30dp</dimen>
+    <dimen name="new_playlist_cover_dash_gap">30dp</dimen>
+    <dimen name="new_playlist_cover_stroke_width">1dp</dimen>
+    <dimen name="new_playlist_add_photo_size">100dp</dimen>
+    <dimen name="new_playlist_fields_margin_top">32dp</dimen>
+    <dimen name="new_playlist_field_spacing">16dp</dimen>
+    <dimen name="new_playlist_field_margin_horizontal">16dp</dimen>
+    <dimen name="new_playlist_field_corner_radius">4dp</dimen>
+    <dimen name="new_playlist_field_stroke_width">1dp</dimen>
+    <dimen name="new_playlist_content_padding_bottom">16dp</dimen>
+    <dimen name="new_playlist_create_height">44dp</dimen>
+    <dimen name="new_playlist_create_margin_horizontal">17dp</dimen>
+    <dimen name="new_playlist_create_margin_bottom">32dp</dimen>
+    <dimen name="new_playlist_create_corner_radius">8dp</dimen>
 </resources>

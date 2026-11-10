@@ -23,4 +23,11 @@
     <color name="bottom_navigation_selected">@color/blue</color>
     <color name="bottom_navigation_unselected">@color/black</color>
     <color name="bottom_navigation_divider">@color/light_gray</color>
+    <color name="playlist_placeholder">@color/text_gray</color>
+    <color name="bottom_sheet_background">@color/white</color>
+    <color name="bottom_sheet_handle">@color/light_gray</color>
+    <color name="bottom_sheet_overlay">#801A1B22</color>
+    <color name="text_field_stroke">@color/text_gray</color>
+    <color name="text_field_hint">@color/black</color>
+    <color name="text_field_label">@color/text_gray</color>
 </resources>

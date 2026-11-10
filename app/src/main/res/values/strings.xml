@@ -41,4 +41,24 @@
     <string name="player_year">Год</string>
     <string name="player_genre">Жанр</string>
     <string name="player_country">Страна</string>
+    <string name="player_add_to_playlist_title">Добавить в плейлист</string>
+    <string name="player_track_added_to_playlist">Добавлено в плейлист %1$s</string>
+    <string name="player_track_already_in_playlist">Трек уже добавлен в плейлист %1$s</string>
+
+    <string name="playlist_cover_description">Обложка плейлиста</string>
+    <string name="playlist_tracks_count_one">%d трек</string>
+    <string name="playlist_tracks_count_few">%d трека</string>
+    <string name="playlist_tracks_count_many">%d треков</string>
+
+    <string name="new_playlist_title">Новый плейлист</string>
+    <string name="new_playlist_back_description">Назад</string>
+    <string name="new_playlist_add_cover_description">Выбрать обложку плейлиста</string>
+    <string name="new_playlist_name_hint">Название*</string>
+    <string name="new_playlist_description_hint">Описание</string>
+    <string name="new_playlist_create">Создать</string>
+    <string name="new_playlist_created">Плейлист %1$s создан</string>
+    <string name="new_playlist_discard_title">Завершить создание плейлиста?</string>
+    <string name="new_playlist_discard_message">Все несохраненные данные будут потеряны</string>
+    <string name="new_playlist_discard_cancel">Отмена</string>
+    <string name="new_playlist_discard_confirm">Завершить</string>
 </resources>

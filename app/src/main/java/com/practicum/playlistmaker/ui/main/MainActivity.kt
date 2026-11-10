@@ -23,8 +23,11 @@ class MainActivity : AppCompatActivity() {
 
         binding.bottomNavigationView.setupWithNavController(navController)
 
+        val destinationsWithoutBottomNavigation =
+            setOf(R.id.audioPlayerFragment, R.id.newPlaylistFragment)
+
         navController.addOnDestinationChangedListener { _, destination, _ ->
-            val isBottomNavigationVisible = destination.id != R.id.audioPlayerFragment
+            val isBottomNavigationVisible = destination.id !in destinationsWithoutBottomNavigation
             binding.bottomNavigationView.isVisible = isBottomNavigationVisible
             binding.bottomNavigationDivider.isVisible = isBottomNavigationVisible
         }
