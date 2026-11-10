@@ -113,7 +113,7 @@ class PlayerViewModel(
         }
 
         addToPlaylistJob = viewModelScope.launch {
-            val isAdded = playlistsInteractor.addTrackToPlaylist(track, playlist)
+            val isAdded = playlistsInteractor.addTrackToPlaylist(track, playlist.id)
             val result = if (isAdded) {
                 AddToPlaylistResult.Added(playlist.name)
             } else {

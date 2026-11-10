@@ -41,8 +41,8 @@ class PlaylistsRepositoryImpl(
             entities.map { playlistDbMapper.toDomain(it) }
         }
 
-    override suspend fun addTrackToPlaylist(track: Track, playlist: Playlist): Boolean {
-        val currentPlaylist = playlistsDao.getPlaylist(playlist.id)
+    override suspend fun addTrackToPlaylist(track: Track, playlistId: Long): Boolean {
+        val currentPlaylist = playlistsDao.getPlaylist(playlistId)
             ?.let { playlistDbMapper.toDomain(it) }
             ?: return false
         if (track.trackId in currentPlaylist.trackIds) return false

@@ -46,9 +46,12 @@
     <string name="player_track_already_in_playlist">Трек уже добавлен в плейлист %1$s</string>
 
     <string name="playlist_cover_description">Обложка плейлиста</string>
-    <string name="playlist_tracks_count_one">%d трек</string>
-    <string name="playlist_tracks_count_few">%d трека</string>
-    <string name="playlist_tracks_count_many">%d треков</string>
+    <plurals name="playlist_tracks_count">
+        <item quantity="one">%d трек</item>
+        <item quantity="few">%d трека</item>
+        <item quantity="many">%d треков</item>
+        <item quantity="other">%d трека</item>
+    </plurals>
 
     <string name="new_playlist_title">Новый плейлист</string>
     <string name="new_playlist_back_description">Назад</string>

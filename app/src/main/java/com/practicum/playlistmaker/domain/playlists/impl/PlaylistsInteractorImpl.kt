@@ -16,6 +16,6 @@ class PlaylistsInteractorImpl(
 
     override fun getPlaylists(): Flow<List<Playlist>> = repository.getPlaylists()
 
-    override suspend fun addTrackToPlaylist(track: Track, playlist: Playlist): Boolean =
-        repository.addTrackToPlaylist(track, playlist)
+    override suspend fun addTrackToPlaylist(track: Track, playlistId: Long): Boolean =
+        repository.addTrackToPlaylist(track, playlistId)
 }

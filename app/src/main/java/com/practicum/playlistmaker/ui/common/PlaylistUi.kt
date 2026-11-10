@@ -28,13 +28,5 @@ fun ImageView.loadPlaylistCover(coverPath: String?) {
 }
 
 fun TextView.showTracksCount(tracksCount: Int) {
-    val lastDigit = tracksCount % 10
-    val lastTwoDigits = tracksCount % 100
-    val stringRes = when {
-        lastTwoDigits in 11..14 -> R.string.playlist_tracks_count_many
-        lastDigit == 1 -> R.string.playlist_tracks_count_one
-        lastDigit in 2..4 -> R.string.playlist_tracks_count_few
-        else -> R.string.playlist_tracks_count_many
-    }
-    text = context.getString(stringRes, tracksCount)
+    text = resources.getQuantityString(R.plurals.playlist_tracks_count, tracksCount, tracksCount)
 }
