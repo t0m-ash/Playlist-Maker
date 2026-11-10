@@ -47,6 +47,7 @@ class AudioPlayerFragment : Fragment() {
 
         binding.playerBackButton.setOnClickListener { findNavController().navigateUp() }
         binding.playerPlayButton.setOnClickListener { viewModel.onPlayButtonClicked() }
+        binding.playerFavoriteButton.setOnClickListener { viewModel.onFavoriteClicked() }
     }
 
     override fun onPause() {
@@ -76,6 +77,16 @@ class AudioPlayerFragment : Fragment() {
             binding.playerPlayButton.setImageResource(R.drawable.ic_player_play)
             binding.playerPlayButton.contentDescription =
                 getString(R.string.player_play_description)
+        }
+
+        if (state.track.isFavorite) {
+            binding.playerFavoriteButton.setImageResource(R.drawable.ic_player_favorite_active)
+            binding.playerFavoriteButton.contentDescription =
+                getString(R.string.player_favorite_remove_description)
+        } else {
+            binding.playerFavoriteButton.setImageResource(R.drawable.ic_player_favorite)
+            binding.playerFavoriteButton.contentDescription =
+                getString(R.string.player_favorite_description)
         }
     }
 

@@ -27,7 +27,8 @@
 
     <dimen name="text_size_11">11sp</dimen>
     <dimen name="track_item_min_height">61dp</dimen>
-    <dimen name="track_item_padding_horizontal">12dp</dimen>
+    <dimen name="track_item_padding_start">13dp</dimen>
+    <dimen name="track_item_padding_end">12dp</dimen>
     <dimen name="track_item_padding_vertical">8dp</dimen>
     <dimen name="track_artwork_size">45dp</dimen>
     <dimen name="track_artwork_corner_radius">2dp</dimen>
@@ -73,6 +74,7 @@
     <dimen name="library_new_playlist_height">36dp</dimen>
     <dimen name="library_new_playlist_radius">54dp</dimen>
     <dimen name="library_playlists_placeholder_margin_top">46dp</dimen>
+    <dimen name="library_favorites_list_padding_top">16dp</dimen>
 
     <dimen name="text_size_12">12sp</dimen>
     <dimen name="bottom_navigation_height">56dp</dimen>

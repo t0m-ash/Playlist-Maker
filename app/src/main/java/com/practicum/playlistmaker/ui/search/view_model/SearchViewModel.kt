@@ -8,6 +8,7 @@ import com.practicum.playlistmaker.domain.models.Track
 import com.practicum.playlistmaker.domain.search.SearchHistoryInteractor
 import com.practicum.playlistmaker.domain.search.TracksInteractor
 import com.practicum.playlistmaker.ui.search.models.SearchState
+import com.practicum.playlistmaker.util.ClickDebouncer
 import com.practicum.playlistmaker.util.Resource
 import com.practicum.playlistmaker.util.SingleLiveEvent
 import kotlinx.coroutines.Job
@@ -25,11 +26,13 @@ class SearchViewModel(
     private val showPlayerEvent = SingleLiveEvent<Track>()
     fun observeShowPlayer(): LiveData<Track> = showPlayerEvent
 
+    private val clickDebouncer = ClickDebouncer(viewModelScope)
+
     private var latestSearchText: String = ""
     private var isSearchFieldFocused: Boolean = false
-    private var isClickAllowed = true
 
     private var searchJob: Job? = null
+    private var historyJob: Job? = null
 
     fun onSearchTextChanged(changedText: String) {
         if (latestSearchText == changedText) return
@@ -42,6 +45,7 @@ class SearchViewModel(
             return
         }
 
+        historyJob?.cancel()
         if (stateLiveData.value is SearchState.History) {
             renderState(SearchState.Idle)
         }
@@ -66,7 +70,7 @@ class SearchViewModel(
     }
 
     fun onTrackClicked(track: Track) {
-        if (!clickDebounce()) return
+        if (!clickDebouncer.tryClick()) return
 
         searchHistoryInteractor.addTrack(track)
         if (stateLiveData.value is SearchState.History) {
@@ -76,30 +80,25 @@ class SearchViewModel(
     }
 
     fun onClearHistoryClicked() {
+        historyJob?.cancel()
         searchHistoryInteractor.clear()
-        renderHistoryOrIdle()
-    }
-
-    private fun clickDebounce(): Boolean {
-        val current = isClickAllowed
-        if (isClickAllowed) {
-            isClickAllowed = false
-            viewModelScope.launch {
-                delay(CLICK_DEBOUNCE_DELAY)
-                isClickAllowed = true
-            }
-        }
-        return current
+        renderState(SearchState.Idle)
     }
 
     private fun renderHistoryOrIdle() {
-        val tracks = searchHistoryInteractor.getTracks()
-        val shouldShowHistory =
-            isSearchFieldFocused && latestSearchText.isBlank() && tracks.isNotEmpty()
+        historyJob?.cancel()
 
-        renderState(
-            if (shouldShowHistory) SearchState.History(tracks) else SearchState.Idle
-        )
+        if (!isSearchFieldFocused || latestSearchText.isNotBlank()) {
+            renderState(SearchState.Idle)
+            return
+        }
+
+        historyJob = viewModelScope.launch {
+            val tracks = searchHistoryInteractor.getTracks()
+            renderState(
+                if (tracks.isEmpty()) SearchState.Idle else SearchState.History(tracks)
+            )
+        }
     }
 
     private fun startSearch(query: String, delayMillis: Long = 0L) {
@@ -140,6 +139,5 @@ class SearchViewModel(
 
     companion object {
         private const val SEARCH_DEBOUNCE_DELAY = 2000L
-        private const val CLICK_DEBOUNCE_DELAY = 1000L
     }
 }

@@ -4,6 +4,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.practicum.playlistmaker.domain.favorites.FavoriteTracksInteractor
 import com.practicum.playlistmaker.domain.models.Track
 import com.practicum.playlistmaker.domain.player.PlayerInteractor
 import com.practicum.playlistmaker.domain.player.models.PlayerState
@@ -15,6 +16,7 @@ import kotlinx.coroutines.launch
 class PlayerViewModel(
     track: Track,
     private val playerInteractor: PlayerInteractor,
+    private val favoriteTracksInteractor: FavoriteTracksInteractor,
 ) : ViewModel() {
 
     private var screenState = PlayerScreenState(
@@ -28,6 +30,7 @@ class PlayerViewModel(
     fun observeScreenState(): LiveData<PlayerScreenState> = screenStateLiveData
 
     private var progressJob: Job? = null
+    private var favoriteJob: Job? = null
 
     init {
         playerInteractor.preparePlayer(
@@ -40,6 +43,11 @@ class PlayerViewModel(
                 updateState { it.copy(isPlaying = false, progress = DEFAULT_PROGRESS) }
             },
         )
+
+        favoriteJob = viewModelScope.launch {
+            val isFavorite = favoriteTracksInteractor.isFavorite(track.trackId)
+            updateState { it.copy(track = it.track.copy(isFavorite = isFavorite)) }
+        }
     }
 
     fun onPlayButtonClicked() {
@@ -52,6 +60,20 @@ class PlayerViewModel(
             PlayerState.PAUSED -> onPlaybackPaused()
 
             PlayerState.DEFAULT, PlayerState.PREPARED -> Unit
+        }
+    }
+
+    fun onFavoriteClicked() {
+        if (favoriteJob?.isActive == true) return
+
+        val track = screenState.track
+        favoriteJob = viewModelScope.launch {
+            if (track.isFavorite) {
+                favoriteTracksInteractor.deleteTrack(track)
+            } else {
+                favoriteTracksInteractor.addTrack(track)
+            }
+            updateState { it.copy(track = it.track.copy(isFavorite = !track.isFavorite)) }
         }
     }
 

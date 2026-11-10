@@ -1,29 +1,40 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:gravity="center_horizontal"
-    android:orientation="vertical"
     tools:context=".ui.library.FavoriteTracksFragment">
 
-    <ImageView
-        android:id="@+id/placeholderImage"
-        android:layout_width="@dimen/placeholder_image_size"
-        android:layout_height="@dimen/placeholder_image_size"
-        android:layout_marginTop="@dimen/library_placeholder_margin_top"
-        android:contentDescription="@string/search_placeholder_description"
-        android:src="@drawable/ic_nothing_found"
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/favoriteTracksRecyclerView"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:clipToPadding="false"
+        android:paddingTop="@dimen/library_favorites_list_padding_top"
         android:visibility="gone"
-        tools:visibility="visible" />
+        tools:listitem="@layout/item_track" />
 
-    <TextView
-        android:id="@+id/placeholderMessage"
-        style="@style/PlaceholderMessageStyle"
-        android:layout_marginTop="@dimen/placeholder_text_margin_top"
-        android:layout_marginHorizontal="@dimen/placeholder_text_margin_horizontal"
-        android:text="@string/library_empty_favorites"
+    <LinearLayout
+        android:id="@+id/placeholderLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center_horizontal"
+        android:orientation="vertical"
         android:visibility="gone"
-        tools:visibility="visible" />
+        tools:visibility="visible">
 
-</LinearLayout>
+        <ImageView
+            android:layout_width="@dimen/placeholder_image_size"
+            android:layout_height="@dimen/placeholder_image_size"
+            android:layout_marginTop="@dimen/library_placeholder_margin_top"
+            android:contentDescription="@string/search_placeholder_description"
+            android:src="@drawable/ic_nothing_found" />
+
+        <TextView
+            style="@style/PlaceholderMessageStyle"
+            android:layout_marginTop="@dimen/placeholder_text_margin_top"
+            android:layout_marginHorizontal="@dimen/placeholder_text_margin_horizontal"
+            android:text="@string/library_empty_favorites" />
+    </LinearLayout>
+
+</FrameLayout>

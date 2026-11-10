@@ -8,10 +8,10 @@ class SearchHistoryInteractorImpl(
     private val repository: SearchHistoryRepository,
 ) : SearchHistoryInteractor {
 
-    override fun getTracks(): List<Track> = repository.getTracks()
+    override suspend fun getTracks(): List<Track> = repository.getTracks()
 
     override fun addTrack(track: Track) {
-        val tracks = repository.getTracks().toMutableList()
+        val tracks = repository.getSavedTracks().toMutableList()
         tracks.removeAll { it.trackId == track.trackId }
         tracks.add(0, track)
         while (tracks.size > MAX_HISTORY_SIZE) {
