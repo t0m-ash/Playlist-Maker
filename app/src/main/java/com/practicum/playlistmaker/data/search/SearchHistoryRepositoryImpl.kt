@@ -1,7 +1,7 @@
 package com.practicum.playlistmaker.data.search
 
 import com.practicum.playlistmaker.data.StorageClient
-import com.practicum.playlistmaker.data.db.AppDatabase
+import com.practicum.playlistmaker.data.db.dao.FavoriteTracksDao
 import com.practicum.playlistmaker.data.dto.TrackHistoryDto
 import com.practicum.playlistmaker.domain.models.Track
 import com.practicum.playlistmaker.domain.search.SearchHistoryRepository
@@ -9,11 +9,11 @@ import com.practicum.playlistmaker.domain.search.SearchHistoryRepository
 class SearchHistoryRepositoryImpl(
     private val storage: StorageClient<ArrayList<TrackHistoryDto>>,
     private val trackMapper: TrackMapper,
-    private val appDatabase: AppDatabase,
+    private val favoriteTracksDao: FavoriteTracksDao,
 ) : SearchHistoryRepository {
 
     override suspend fun getTracks(): List<Track> {
-        val favoriteIds = appDatabase.favoriteTracksDao().getTrackIds().toSet()
+        val favoriteIds = favoriteTracksDao.getTrackIds().toSet()
         return getSavedTracks().map { it.copy(isFavorite = it.trackId in favoriteIds) }
     }
 

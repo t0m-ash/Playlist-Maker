@@ -66,6 +66,8 @@ val dataModule = module {
             .build()
     }
 
+    single { get<AppDatabase>().favoriteTracksDao() }
+
     single<ExternalNavigator> {
         ExternalNavigatorImpl(androidContext())
     }

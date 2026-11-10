@@ -5,7 +5,8 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:minHeight="@dimen/track_item_min_height"
-    android:paddingHorizontal="@dimen/track_item_padding_horizontal"
+    android:paddingStart="@dimen/track_item_padding_start"
+    android:paddingEnd="@dimen/track_item_padding_end"
     android:paddingVertical="@dimen/track_item_padding_vertical">
 
     <ImageView
@@ -77,6 +78,7 @@
         android:layout_height="@dimen/track_chevron_size"
         android:contentDescription="@null"
         android:src="@drawable/ic_arrow_forward_24"
+        app:tint="@color/track_chevron"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent" />

@@ -1,7 +1,7 @@
 package com.practicum.playlistmaker.data.search
 
 import com.practicum.playlistmaker.data.NetworkClient
-import com.practicum.playlistmaker.data.db.AppDatabase
+import com.practicum.playlistmaker.data.db.dao.FavoriteTracksDao
 import com.practicum.playlistmaker.data.dto.Response
 import com.practicum.playlistmaker.data.dto.TracksSearchRequest
 import com.practicum.playlistmaker.data.dto.TracksSearchResponse
@@ -14,7 +14,7 @@ import kotlinx.coroutines.flow.flow
 class TracksRepositoryImpl(
     private val networkClient: NetworkClient,
     private val trackMapper: TrackMapper,
-    private val appDatabase: AppDatabase,
+    private val favoriteTracksDao: FavoriteTracksDao,
 ) : TracksRepository {
 
     override fun searchTracks(expression: String): Flow<Resource<List<Track>>> = flow {
@@ -23,7 +23,7 @@ class TracksRepositoryImpl(
         if (response.resultCode != Response.SUCCESS_CODE || response !is TracksSearchResponse) {
             emit(Resource.Error())
         } else {
-            val favoriteIds = appDatabase.favoriteTracksDao().getTrackIds().toSet()
+            val favoriteIds = favoriteTracksDao.getTrackIds().toSet()
             val tracks = response.results.orEmpty()
                 .map { trackMapper.toDomain(it) }
                 .map { it.copy(isFavorite = it.trackId in favoriteIds) }
