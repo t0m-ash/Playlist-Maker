@@ -22,9 +22,7 @@ class PlaylistsRepositoryImpl(
 ) : PlaylistsRepository {
 
     override suspend fun createPlaylist(name: String, description: String, coverUri: String?) {
-        val coverPath = coverUri?.let { uri ->
-            withContext(Dispatchers.IO) { imageStorage.saveImage(uri) }
-        }
+        val coverPath = coverUri?.let { saveCover(it) }
         val playlist = Playlist(
             id = NEW_PLAYLIST_ID,
             name = name,
@@ -36,15 +34,54 @@ class PlaylistsRepositoryImpl(
         playlistsDao.insertPlaylist(playlistDbMapper.toEntity(playlist))
     }
 
+    override suspend fun updatePlaylist(
+        playlistId: Long,
+        name: String,
+        description: String,
+        newCoverUri: String?,
+    ) {
+        val playlist = findPlaylist(playlistId) ?: return
+        val newCoverPath = newCoverUri?.let { saveCover(it) }
+        val updatedPlaylist = playlist.copy(
+            name = name,
+            description = description,
+            coverPath = newCoverPath ?: playlist.coverPath,
+        )
+        playlistsDao.updatePlaylist(playlistDbMapper.toEntity(updatedPlaylist))
+
+        val oldCoverPath = playlist.coverPath
+        if (newCoverPath != null && oldCoverPath != null) {
+            deleteCover(oldCoverPath)
+        }
+    }
+
+    override suspend fun deletePlaylist(playlistId: Long) {
+        val playlist = findPlaylist(playlistId) ?: return
+        playlistsDao.deletePlaylist(playlistId)
+        deleteTracksNotInAnyPlaylist(playlist.trackIds)
+        playlist.coverPath?.let { deleteCover(it) }
+    }
+
     override fun getPlaylists(): Flow<List<Playlist>> =
         playlistsDao.getPlaylists().map { entities ->
             entities.map { playlistDbMapper.toDomain(it) }
         }
 
+    override fun getPlaylist(playlistId: Long): Flow<Playlist?> =
+        playlistsDao.observePlaylist(playlistId).map { entity ->
+            entity?.let { playlistDbMapper.toDomain(it) }
+        }
+
+    override fun getTracks(trackIds: List<Long>): Flow<List<Track>> =
+        playlistTracksDao.getTracks().map { entities ->
+            val tracksById = entities.associateBy { it.trackId }
+            trackIds.asReversed().mapNotNull { trackId ->
+                tracksById[trackId]?.let { trackDbMapper.toDomain(it) }
+            }
+        }
+
     override suspend fun addTrackToPlaylist(track: Track, playlistId: Long): Boolean {
-        val currentPlaylist = playlistsDao.getPlaylist(playlistId)
-            ?.let { playlistDbMapper.toDomain(it) }
-            ?: return false
+        val currentPlaylist = findPlaylist(playlistId) ?: return false
         if (track.trackId in currentPlaylist.trackIds) return false
 
         playlistTracksDao.insertTrack(trackDbMapper.toPlaylistTrackEntity(track))
@@ -54,6 +91,39 @@ class PlaylistsRepositoryImpl(
         )
         playlistsDao.updatePlaylist(playlistDbMapper.toEntity(updatedPlaylist))
         return true
+    }
+
+    override suspend fun deleteTrackFromPlaylist(trackId: Long, playlistId: Long) {
+        val currentPlaylist = findPlaylist(playlistId) ?: return
+        if (trackId !in currentPlaylist.trackIds) return
+
+        val trackIds = currentPlaylist.trackIds - trackId
+        val updatedPlaylist = currentPlaylist.copy(
+            trackIds = trackIds,
+            tracksCount = trackIds.size,
+        )
+        playlistsDao.updatePlaylist(playlistDbMapper.toEntity(updatedPlaylist))
+        deleteTracksNotInAnyPlaylist(listOf(trackId))
+    }
+
+    private suspend fun findPlaylist(playlistId: Long): Playlist? =
+        playlistsDao.getPlaylist(playlistId)?.let { playlistDbMapper.toDomain(it) }
+
+    private suspend fun deleteTracksNotInAnyPlaylist(trackIds: List<Long>) {
+        if (trackIds.isEmpty()) return
+
+        val trackIdsInPlaylists = playlistsDao.getAllPlaylists()
+            .flatMapTo(HashSet()) { playlistDbMapper.toDomain(it).trackIds }
+        trackIds
+            .filterNot { it in trackIdsInPlaylists }
+            .forEach { playlistTracksDao.deleteTrack(it) }
+    }
+
+    private suspend fun saveCover(uri: String): String? =
+        withContext(Dispatchers.IO) { imageStorage.saveImage(uri) }
+
+    private suspend fun deleteCover(path: String) {
+        withContext(Dispatchers.IO) { imageStorage.deleteImage(path) }
     }
 
     companion object {

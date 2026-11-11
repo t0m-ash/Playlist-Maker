@@ -4,7 +4,7 @@ import com.practicum.playlistmaker.domain.sharing.models.EmailData
 
 interface ExternalNavigator {
 
-    fun shareLink(link: String)
+    fun shareText(text: String)
 
     fun openLink(link: String)
 

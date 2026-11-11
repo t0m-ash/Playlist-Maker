@@ -30,4 +30,6 @@
     <color name="text_field_stroke">@color/text_gray</color>
     <color name="text_field_hint">@color/black</color>
     <color name="text_field_label">@color/text_gray</color>
+    <color name="playlist_screen_background">@color/light_gray</color>
+    <color name="playlist_screen_content">@color/black</color>
 </resources>

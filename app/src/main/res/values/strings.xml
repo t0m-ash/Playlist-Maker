@@ -52,6 +52,29 @@
         <item quantity="many">%d треков</item>
         <item quantity="other">%d трека</item>
     </plurals>
+    <plurals name="playlist_duration_minutes">
+        <item quantity="one">%d минута</item>
+        <item quantity="few">%d минуты</item>
+        <item quantity="many">%d минут</item>
+        <item quantity="other">%d минуты</item>
+    </plurals>
+    <string name="playlist_info">%1$s • %2$s</string>
+    <string name="playlist_back_description">Назад</string>
+    <string name="playlist_share_description">Поделиться</string>
+    <string name="playlist_menu_description">Меню</string>
+    <string name="playlist_empty_tracks">В этом плейлисте нет треков</string>
+    <string name="playlist_nothing_to_share">В этом плейлисте нет списка треков, которым можно поделиться</string>
+    <string name="playlist_share_track">%1$d. %2$s - %3$s (%4$s)</string>
+    <string name="playlist_menu_share">Поделиться</string>
+    <string name="playlist_menu_edit">Редактировать информацию</string>
+    <string name="playlist_menu_delete">Удалить плейлист</string>
+    <string name="playlist_delete_track_message">Хотите удалить трек?</string>
+    <string name="playlist_delete_track_cancel">Нет</string>
+    <string name="playlist_delete_track_confirm">Да</string>
+    <string name="playlist_delete_title">Удалить плейлист</string>
+    <string name="playlist_delete_message">Вы уверены, что хотите удалить этот плейлист?</string>
+    <string name="playlist_delete_cancel">Отмена</string>
+    <string name="playlist_delete_confirm">Удалить</string>
 
     <string name="new_playlist_title">Новый плейлист</string>
     <string name="new_playlist_back_description">Назад</string>
@@ -64,4 +87,7 @@
     <string name="new_playlist_discard_message">Все несохраненные данные будут потеряны</string>
     <string name="new_playlist_discard_cancel">Отмена</string>
     <string name="new_playlist_discard_confirm">Завершить</string>
+
+    <string name="edit_playlist_title">Редактировать</string>
+    <string name="edit_playlist_save">Сохранить</string>
 </resources>

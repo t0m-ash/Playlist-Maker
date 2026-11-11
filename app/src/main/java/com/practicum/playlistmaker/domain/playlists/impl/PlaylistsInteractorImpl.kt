@@ -14,8 +14,31 @@ class PlaylistsInteractorImpl(
         repository.createPlaylist(name, description, coverUri)
     }
 
+    override suspend fun updatePlaylist(
+        playlistId: Long,
+        name: String,
+        description: String,
+        newCoverUri: String?,
+    ) {
+        repository.updatePlaylist(playlistId, name, description, newCoverUri)
+    }
+
+    override suspend fun deletePlaylist(playlistId: Long) {
+        repository.deletePlaylist(playlistId)
+    }
+
     override fun getPlaylists(): Flow<List<Playlist>> = repository.getPlaylists()
+
+    override fun getPlaylist(playlistId: Long): Flow<Playlist?> =
+        repository.getPlaylist(playlistId)
+
+    override fun getTracks(trackIds: List<Long>): Flow<List<Track>> =
+        repository.getTracks(trackIds)
 
     override suspend fun addTrackToPlaylist(track: Track, playlistId: Long): Boolean =
         repository.addTrackToPlaylist(track, playlistId)
+
+    override suspend fun deleteTrackFromPlaylist(trackId: Long, playlistId: Long) {
+        repository.deleteTrackFromPlaylist(trackId, playlistId)
+    }
 }

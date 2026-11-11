@@ -21,6 +21,9 @@ class PlaylistsViewModel(
     private val openNewPlaylistEvent = SingleLiveEvent<Unit>()
     fun observeOpenNewPlaylist(): LiveData<Unit> = openNewPlaylistEvent
 
+    private val openPlaylistEvent = SingleLiveEvent<Long>()
+    fun observeOpenPlaylist(): LiveData<Long> = openPlaylistEvent
+
     private val clickDebouncer = ClickDebouncer(viewModelScope)
 
     init {
@@ -35,6 +38,12 @@ class PlaylistsViewModel(
         if (!clickDebouncer.tryClick()) return
 
         openNewPlaylistEvent.setValue(Unit)
+    }
+
+    fun onPlaylistClicked(playlist: Playlist) {
+        if (!clickDebouncer.tryClick()) return
+
+        openPlaylistEvent.setValue(playlist.id)
     }
 
     private fun processResult(playlists: List<Playlist>) {

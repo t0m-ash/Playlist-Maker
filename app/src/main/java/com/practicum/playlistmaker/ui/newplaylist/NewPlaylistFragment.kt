@@ -25,12 +25,12 @@ import com.practicum.playlistmaker.ui.newplaylist.models.NewPlaylistState
 import com.practicum.playlistmaker.ui.newplaylist.view_model.NewPlaylistViewModel
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
-class NewPlaylistFragment : Fragment() {
+open class NewPlaylistFragment : Fragment() {
 
     private var _binding: FragmentNewPlaylistBinding? = null
-    private val binding get() = _binding!!
+    protected val binding get() = _binding!!
 
-    private val viewModel: NewPlaylistViewModel by viewModel()
+    protected open val viewModel: NewPlaylistViewModel by viewModel()
 
     private val pickCoverLauncher =
         registerForActivityResult(ActivityResultContracts.PickVisualMedia()) { uri ->

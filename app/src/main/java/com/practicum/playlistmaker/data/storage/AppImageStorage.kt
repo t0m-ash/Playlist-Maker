@@ -17,10 +17,7 @@ class AppImageStorage(
 
     override fun saveImage(uri: String): String? {
         val sourceUri = uri.toUri()
-        val directory = File(
-            context.getExternalFilesDir(Environment.DIRECTORY_PICTURES) ?: context.filesDir,
-            directoryName,
-        )
+        val directory = getDirectory()
         if (!directory.exists() && !directory.mkdirs()) return null
 
         val extension = context.contentResolver.getType(sourceUri)
@@ -42,6 +39,18 @@ class AppImageStorage(
             null
         }
     }
+
+    override fun deleteImage(path: String) {
+        val file = File(path)
+        if (file.parentFile?.canonicalPath == getDirectory().canonicalPath) {
+            file.delete()
+        }
+    }
+
+    private fun getDirectory(): File = File(
+        context.getExternalFilesDir(Environment.DIRECTORY_PICTURES) ?: context.filesDir,
+        directoryName,
+    )
 
     companion object {
         private const val DEFAULT_EXTENSION = "jpg"

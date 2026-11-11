@@ -118,4 +118,25 @@
     <dimen name="new_playlist_create_margin_horizontal">17dp</dimen>
     <dimen name="new_playlist_create_margin_bottom">32dp</dimen>
     <dimen name="new_playlist_create_corner_radius">8dp</dimen>
+
+    <dimen name="text_size_24">24sp</dimen>
+    <dimen name="playlist_title_line_height">28sp</dimen>
+    <dimen name="playlist_info_line_height">21sp</dimen>
+    <dimen name="playlist_content_margin_horizontal">16dp</dimen>
+    <dimen name="playlist_title_margin_top">24dp</dimen>
+    <dimen name="playlist_info_margin_top">8dp</dimen>
+    <dimen name="playlist_action_size">40dp</dimen>
+    <dimen name="playlist_action_padding">8dp</dimen>
+    <dimen name="playlist_actions_margin_start">8dp</dimen>
+    <dimen name="playlist_actions_margin_top">8dp</dimen>
+    <dimen name="playlist_tracks_sheet_margin_top">16dp</dimen>
+    <dimen name="playlist_tracks_sheet_peek_height">266dp</dimen>
+    <dimen name="playlist_tracks_sheet_min_peek_height">100dp</dimen>
+    <dimen name="playlist_tracks_list_margin_top">12dp</dimen>
+    <dimen name="playlist_empty_tracks_margin_top">24dp</dimen>
+    <dimen name="playlist_menu_sheet_height">383dp</dimen>
+    <dimen name="playlist_menu_card_margin_top">12dp</dimen>
+    <dimen name="playlist_menu_items_margin_top">8dp</dimen>
+    <dimen name="playlist_menu_item_height">61dp</dimen>
+    <dimen name="playlist_menu_item_padding_horizontal">16dp</dimen>
 </resources>
