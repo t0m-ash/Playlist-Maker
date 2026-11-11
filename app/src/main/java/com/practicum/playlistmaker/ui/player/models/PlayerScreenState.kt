@@ -1,5 +1,6 @@
 package com.practicum.playlistmaker.ui.player.models
 
+import com.practicum.playlistmaker.domain.models.Playlist
 import com.practicum.playlistmaker.domain.models.Track
 
 data class PlayerScreenState(
@@ -7,4 +8,5 @@ data class PlayerScreenState(
     val isPlayEnabled: Boolean,
     val isPlaying: Boolean,
     val progress: String,
+    val playlists: List<Playlist>,
 )
