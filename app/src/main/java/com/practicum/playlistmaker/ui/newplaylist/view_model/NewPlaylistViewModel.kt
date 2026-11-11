@@ -12,14 +12,17 @@ import com.practicum.playlistmaker.util.SingleLiveEvent
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
 
-class NewPlaylistViewModel(
-    private val playlistsInteractor: PlaylistsInteractor,
-    private val savedStateHandle: SavedStateHandle,
+open class NewPlaylistViewModel(
+    protected val playlistsInteractor: PlaylistsInteractor,
+    protected val savedStateHandle: SavedStateHandle,
 ) : ViewModel() {
 
-    private var name: String = savedStateHandle[KEY_NAME] ?: ""
-    private var description: String = savedStateHandle[KEY_DESCRIPTION] ?: ""
-    private var coverUri: String? = savedStateHandle[KEY_COVER_URI]
+    protected var name: String = savedStateHandle[KEY_NAME] ?: ""
+        private set
+    protected var description: String = savedStateHandle[KEY_DESCRIPTION] ?: ""
+        private set
+    protected var coverUri: String? = savedStateHandle[KEY_COVER_URI]
+        private set
 
     private val stateLiveData = MutableLiveData(buildState())
     fun observeState(): LiveData<NewPlaylistState> = stateLiveData
@@ -27,7 +30,7 @@ class NewPlaylistViewModel(
     private val eventLiveData = SingleLiveEvent<NewPlaylistEvent>()
     fun observeEvents(): LiveData<NewPlaylistEvent> = eventLiveData
 
-    private var createJob: Job? = null
+    protected var saveJob: Job? = null
 
     fun onNameChanged(text: String) {
         name = text
@@ -46,33 +49,39 @@ class NewPlaylistViewModel(
         updateState()
     }
 
-    fun onBackPressed() {
-        if (createJob?.isActive == true) return
+    open fun onBackPressed() {
+        if (isSaving()) return
 
         val event = if (hasUnsavedData()) {
             NewPlaylistEvent.ShowDiscardDialog
         } else {
             NewPlaylistEvent.Close
         }
-        eventLiveData.setValue(event)
+        sendEvent(event)
     }
 
     fun onDiscardConfirmed() {
-        eventLiveData.setValue(NewPlaylistEvent.Close)
+        sendEvent(NewPlaylistEvent.Close)
     }
 
-    fun onCreateClicked() {
+    open fun onCreateClicked() {
         val playlistName = name.trim()
-        if (playlistName.isEmpty() || createJob?.isActive == true) return
+        if (playlistName.isEmpty() || isSaving()) return
 
-        createJob = viewModelScope.launch {
+        saveJob = viewModelScope.launch {
             playlistsInteractor.createPlaylist(
                 name = playlistName,
                 description = description.trim(),
                 coverUri = coverUri,
             )
-            eventLiveData.setValue(NewPlaylistEvent.PlaylistCreated(playlistName))
+            sendEvent(NewPlaylistEvent.PlaylistCreated(playlistName))
         }
+    }
+
+    protected fun isSaving(): Boolean = saveJob?.isActive == true
+
+    protected fun sendEvent(event: NewPlaylistEvent) {
+        eventLiveData.setValue(event)
     }
 
     private fun hasUnsavedData(): Boolean =

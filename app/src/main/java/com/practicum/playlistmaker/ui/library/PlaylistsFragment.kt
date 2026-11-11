@@ -13,6 +13,7 @@ import com.practicum.playlistmaker.databinding.FragmentPlaylistsBinding
 import com.practicum.playlistmaker.domain.models.Playlist
 import com.practicum.playlistmaker.ui.library.models.PlaylistsState
 import com.practicum.playlistmaker.ui.library.view_model.PlaylistsViewModel
+import com.practicum.playlistmaker.ui.playlist.PlaylistFragment
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class PlaylistsFragment : Fragment() {
@@ -22,7 +23,9 @@ class PlaylistsFragment : Fragment() {
 
     private val viewModel: PlaylistsViewModel by viewModel()
 
-    private val playlistsAdapter = PlaylistsAdapter()
+    private val playlistsAdapter = PlaylistsAdapter { playlist ->
+        viewModel.onPlaylistClicked(playlist)
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -45,6 +48,10 @@ class PlaylistsFragment : Fragment() {
         viewModel.observeState().observe(viewLifecycleOwner) { state -> render(state) }
 
         viewModel.observeOpenNewPlaylist().observe(viewLifecycleOwner) { openNewPlaylist() }
+
+        viewModel.observeOpenPlaylist().observe(viewLifecycleOwner) { playlistId ->
+            openPlaylist(playlistId)
+        }
     }
 
     override fun onDestroyView() {
@@ -76,6 +83,13 @@ class PlaylistsFragment : Fragment() {
 
     private fun openNewPlaylist() {
         findNavController().navigate(R.id.action_libraryFragment_to_newPlaylistFragment)
+    }
+
+    private fun openPlaylist(playlistId: Long) {
+        findNavController().navigate(
+            R.id.action_libraryFragment_to_playlistFragment,
+            PlaylistFragment.createArgs(playlistId),
+        )
     }
 
     companion object {

@@ -8,12 +8,12 @@ import com.practicum.playlistmaker.domain.sharing.models.EmailData
 
 class ExternalNavigatorImpl(private val context: Context) : ExternalNavigator {
 
-    override fun shareLink(link: String) {
+    override fun shareText(text: String) {
         val intent = Intent(Intent.ACTION_SEND).apply {
             type = "text/plain"
-            putExtra(Intent.EXTRA_TEXT, link)
+            putExtra(Intent.EXTRA_TEXT, text)
         }
-        startExternalActivity(intent)
+        startExternalActivity(Intent.createChooser(intent, null))
     }
 
     override fun openLink(link: String) {

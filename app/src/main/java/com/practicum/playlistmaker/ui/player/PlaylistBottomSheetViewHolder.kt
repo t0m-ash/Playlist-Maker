@@ -5,17 +5,14 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.practicum.playlistmaker.databinding.ItemPlaylistBottomSheetBinding
 import com.practicum.playlistmaker.domain.models.Playlist
-import com.practicum.playlistmaker.ui.common.loadPlaylistCover
-import com.practicum.playlistmaker.ui.common.showTracksCount
+import com.practicum.playlistmaker.ui.common.bind
 
 class PlaylistBottomSheetViewHolder(
     private val binding: ItemPlaylistBottomSheetBinding,
 ) : RecyclerView.ViewHolder(binding.root) {
 
     fun bind(playlist: Playlist) {
-        binding.playlistName.text = playlist.name
-        binding.playlistTracksCount.showTracksCount(playlist.tracksCount)
-        binding.playlistCover.loadPlaylistCover(playlist.coverPath)
+        binding.bind(playlist)
     }
 
     companion object {

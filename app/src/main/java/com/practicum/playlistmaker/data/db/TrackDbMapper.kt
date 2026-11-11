@@ -56,4 +56,18 @@ class TrackDbMapper {
         previewUrl = entity.previewUrl,
         isFavorite = true,
     )
+
+    fun toDomain(entity: PlaylistTrackEntity): Track = Track(
+        trackId = entity.trackId,
+        trackName = entity.trackName,
+        artistName = entity.artistName,
+        trackTime = entity.trackTime,
+        artworkUrl = entity.artworkUrl,
+        coverArtworkUrl = entity.coverArtworkUrl,
+        collectionName = entity.collectionName,
+        releaseYear = entity.releaseYear,
+        primaryGenreName = entity.primaryGenreName,
+        country = entity.country,
+        previewUrl = entity.previewUrl,
+    )
 }

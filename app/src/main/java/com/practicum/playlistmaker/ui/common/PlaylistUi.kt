@@ -5,6 +5,7 @@ import android.widget.TextView
 import androidx.recyclerview.widget.DiffUtil
 import com.bumptech.glide.Glide
 import com.practicum.playlistmaker.R
+import com.practicum.playlistmaker.databinding.ItemPlaylistBottomSheetBinding
 import com.practicum.playlistmaker.domain.models.Playlist
 import java.io.File
 
@@ -29,4 +30,10 @@ fun ImageView.loadPlaylistCover(coverPath: String?) {
 
 fun TextView.showTracksCount(tracksCount: Int) {
     text = resources.getQuantityString(R.plurals.playlist_tracks_count, tracksCount, tracksCount)
+}
+
+fun ItemPlaylistBottomSheetBinding.bind(playlist: Playlist) {
+    playlistName.text = playlist.name
+    playlistTracksCount.showTracksCount(playlist.tracksCount)
+    playlistCover.loadPlaylistCover(playlist.coverPath)
 }

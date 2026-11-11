@@ -23,8 +23,12 @@ class MainActivity : AppCompatActivity() {
 
         binding.bottomNavigationView.setupWithNavController(navController)
 
-        val destinationsWithoutBottomNavigation =
-            setOf(R.id.audioPlayerFragment, R.id.newPlaylistFragment)
+        val destinationsWithoutBottomNavigation = setOf(
+            R.id.audioPlayerFragment,
+            R.id.newPlaylistFragment,
+            R.id.playlistFragment,
+            R.id.editPlaylistFragment,
+        )
 
         navController.addOnDestinationChangedListener { _, destination, _ ->
             val isBottomNavigationVisible = destination.id !in destinationsWithoutBottomNavigation

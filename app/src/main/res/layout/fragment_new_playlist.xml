@@ -27,6 +27,7 @@
             app:tint="@color/track_title" />
 
         <TextView
+            android:id="@+id/newPlaylistTitle"
             style="@style/TopBarTitleStyle"
             android:layout_marginStart="@dimen/new_playlist_title_margin_start"
             android:text="@string/new_playlist_title" />
